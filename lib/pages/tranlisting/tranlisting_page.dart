@@ -19,7 +19,7 @@ class TranListingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF0C98B5),
+          backgroundColor: Color(0xFF734E09),
           foregroundColor: Color(0xFFFFFFFF),
           title: Text(
             "Al Quran Malayalam",
@@ -54,7 +54,7 @@ class TranListingPage extends StatelessWidget {
                       );
                 },
                 child: Icon(Icons.arrow_upward),
-                backgroundColor: Color(0xFF0C98B5),
+                backgroundColor: Color(0xFF734E09),
                 mini: true,
               ),
             )),
@@ -105,7 +105,7 @@ class TranListing extends StatelessWidget {
                           fontFamily: 'AmiriQuran',
                           fontWeight: FontWeight.bold,
                           fontSize: 17.0,
-                          color: Color(0xFF0C98B5))),
+                          color: Color(0xFF734E09))),
                 )
               ]),
             )),
@@ -158,7 +158,7 @@ class TranListing extends StatelessWidget {
                         itemCount: tranLines.length,
                         separatorBuilder: (context, index) => const Divider(
                           height: 2,
-                          color: Color(0xFF0C98B5),
+                          color: Color(0xFF734E09),
                         ),
                         controller:
                             tranListingController.tranLineListScrollController,
@@ -313,8 +313,8 @@ class TranLineView extends StatelessWidget {
                 fontFamily: 'AmiriQuran',
                 fontSize: 20.0,
                 fontWeight: FontWeight.w600)),
-                Container(
-        padding: const EdgeInsets.only(top: 15.0),
+        Container(
+          padding: const EdgeInsets.only(top: 15.0),
         ),
         const Text(
           bismiMText,
@@ -365,7 +365,7 @@ class TranLineView extends StatelessWidget {
                       fontWeight: FontWeight.w600),
                 ),
           Container(
-            padding: const EdgeInsets.only(top:10.0),
+            padding: const EdgeInsets.only(top: 10.0),
             constraints: BoxConstraints(maxWidth: 82.0),
             child: Text(
               malWord,
@@ -380,7 +380,7 @@ class TranLineView extends StatelessWidget {
         ],
       ),
       backgroundColor: Colors.grey[100],
-      side:BorderSide.none,
+      side: BorderSide.none,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6.0),
       ),

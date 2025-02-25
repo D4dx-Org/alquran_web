@@ -7,7 +7,7 @@ import 'package:alquran_malayalam/pages/articles/articles_controller.dart';
 
 class ArticlesPage extends StatelessWidget {
   final ArticlesController controller = Get.put(ArticlesController());
-  Color headColor = const Color(0xFF0C98B5);
+  Color headColor = const Color(0xFF734E09);
 
   ArticlesPage({Key? key}) : super(key: key);
 

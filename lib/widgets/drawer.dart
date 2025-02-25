@@ -4,8 +4,8 @@ import 'package:alquran_malayalam/helpers/settings_helpers.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
 
 class MyDrawer extends StatelessWidget {
-  Color iconColor = const Color(0xFF0C98B5); // Color(0xFF303030);
-  Color menuColor = const Color(0xFF0C98B5);
+  Color iconColor = const Color(0xFF734E09); // Color(0xFF303030);
+  Color menuColor = const Color(0xFF734E09);
   bool isEngSwitched = false;
 
   @override

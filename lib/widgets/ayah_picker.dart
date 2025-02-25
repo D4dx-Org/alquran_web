@@ -50,7 +50,7 @@ class AyahPickerDialog {
                       style: TextStyle(
                           fontFamily: 'NotoSansMalayalam',
                           fontSize: 15.0,
-                          color: Color(0xFF0C98B5),
+                          color: Color(0xFF734E09),
                           fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
@@ -64,7 +64,7 @@ class AyahPickerDialog {
                         selectedTextStyle: TextStyle(
                             fontFamily: 'NotoSansMalayalam',
                             fontSize: 18.0,
-                            color: Color(0xFF0C98B5),
+                            color: Color(0xFF734E09),
                             fontWeight: FontWeight.bold),
                         onChanged: (value) =>
                             controller.selAyahNo.value = value,
@@ -108,7 +108,7 @@ class AyahPickerDialog {
             height: 42,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: Color(0xFF0C98B5),
+              color: Color(0xFF734E09),
             ),
             child: const Center(
                 child: Text(

@@ -22,8 +22,8 @@ class SuraTitleWidget extends StatelessWidget {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
-              Color(0xFF0C98B5),
-              Color(0xFF21DAFF),
+              Color(0xFF734E09),
+              Color(0xFFC1830F),
             ],
           ),
           image: DecorationImage(

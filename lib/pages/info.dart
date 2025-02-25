@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class InfoPage extends StatelessWidget {
-  Color headColor = const Color(0xFF0C98B5);
+  Color headColor = const Color(0xFF734E09);
 
   @override
   Widget build(BuildContext context) {

@@ -17,7 +17,7 @@ class IndexPage extends StatelessWidget {
     return Scaffold(
         drawer: MyDrawer(),
         appBar: AppBar(
-          backgroundColor: Color(0xFF0C98B5),
+          backgroundColor: Color(0xFF734E09),
           foregroundColor: Color(0xFFFFFFFF),
           title: Text(
             "Al Quran Malayalam",
@@ -185,7 +185,7 @@ class SurahItemView extends StatelessWidget {
                 child: IconButton(
                     icon: const Icon(Icons.low_priority),
                     color:
-                        Color(0xFF0C98B5), // Color.fromARGB(255, 244, 203, 53),
+                        Color(0xFF734E09), // Color.fromARGB(255, 244, 203, 53),
                     onPressed: () {
                       AyahPickerDialog ayahPickerDialog = AyahPickerDialog(
                           onOkPressed: () async {

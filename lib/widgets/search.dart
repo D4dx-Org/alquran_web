@@ -25,7 +25,7 @@ class SearchWidget extends StatelessWidget {
                 decoration: InputDecoration(
                     icon: Icon(
                       Icons.search,
-                      color: Color(0xFF0C98B5),
+                      color: Color(0xFF734E09),
                     ),
                     hintText: 'Search text here',
                     border: InputBorder.none),

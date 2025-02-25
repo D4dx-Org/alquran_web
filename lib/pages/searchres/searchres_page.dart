@@ -17,7 +17,7 @@ class SearchResPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF0C98B5),
+          backgroundColor: Color(0xFF734E09),
           foregroundColor: Color(0xFFFFFFFF),
           title: Text("Search"),
           elevation: 0,
@@ -92,7 +92,7 @@ class SearchResListing extends StatelessWidget {
                       title: _viewTranLinewidget(cTranLine, j),
                       trailing: IconButton(
                         icon: const Icon(Icons.link),
-                        color: Color(0xFF0C98B5),
+                        color: Color(0xFF734E09),
                         onPressed: () => controller.showSuraTranLines(
                             cTranLine.suraNo, cTranLine.ayaNo),
                       ),

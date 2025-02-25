@@ -11,7 +11,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF0C98B5),
+          backgroundColor: Color(0xFF734E09),
           foregroundColor: Color(0xFFFFFFFF),
           centerTitle: false,
           title: const Text(
@@ -65,7 +65,7 @@ class SettingsView extends StatelessWidget {
                       child: const Text('Reset',
                           textAlign: TextAlign.right,
                           style: TextStyle(
-                            color: Color(0xFF0C98B5),
+                            color: Color(0xFF734E09),
                             fontFamily: 'Lato',
                             fontSize: 14,
                           )),
@@ -175,9 +175,9 @@ class SliderItemView extends StatelessWidget {
               Expanded(
                   child: Obx(
                 () => Slider(
-                  activeColor: const Color(0xFF0C98B5),
+                  activeColor: const Color(0xFF734E09),
                   inactiveColor: const Color(0xFFC4C4C4),
-                  thumbColor: const Color(0xFF0C98B5),
+                  thumbColor: const Color(0xFF734E09),
                   value: controller.curFontSize(labelText),
                   min: controller
                       .getMinFontSize(labelText), //initialized it to a double
@@ -196,7 +196,7 @@ class SliderItemView extends StatelessWidget {
                     child: Text(controller.getFontSize(labelText),
                         textAlign: TextAlign.left,
                         style: const TextStyle(
-                          color: Color(0xFF0C98B5),
+                          color: Color(0xFF734E09),
                           fontFamily: 'Lato',
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
