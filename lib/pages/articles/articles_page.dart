@@ -15,9 +15,16 @@ class ArticlesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Get.back(),
+          ),
           backgroundColor: headColor,
           title: (controller.selArticle.value != null)
-              ? Text(controller.selArticle.value!.title)
+              ? Text(
+                  controller.selArticle.value!.title,
+                  style: TextStyle(color: Colors.white),
+                )
               : Text('Article'),
           elevation: 0,
         ),
