@@ -1,4 +1,3 @@
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:alquran_malayalam/helpers/settings_helpers.dart';
 import 'package:alquran_malayalam/models/surah.dart';
 import 'package:get/get.dart';
@@ -24,7 +23,6 @@ class IndexController extends GetxController {
   loadDB() async {
     await dbService.openDB();
     loadSurahs();
-    FlutterNativeSplash.remove();
   }
 
   Surah getSurah(int id) {

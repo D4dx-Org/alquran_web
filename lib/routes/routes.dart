@@ -6,6 +6,8 @@ import 'package:alquran_malayalam/pages/searchres/searchres_binding.dart';
 import 'package:alquran_malayalam/pages/searchres/searchres_page.dart';
 import 'package:alquran_malayalam/pages/settings/settings_binding.dart';
 import 'package:alquran_malayalam/pages/settings/settings_page.dart';
+import 'package:alquran_malayalam/pages/splash/splash_binding.dart';
+import 'package:alquran_malayalam/pages/splash/splash_screen.dart';
 import 'package:get/get.dart';
 
 import 'package:alquran_malayalam/pages/index/index_binding.dart';
@@ -15,6 +17,7 @@ import 'package:alquran_malayalam/pages/tranlisting/tranlisting_page.dart';
 
 abstract class AppRoutes {
   static const HOME = '/';
+  static const SPLASH = '/splash';
   static const TRANLISTING = "/tranlisting/:surano/:ayano";
   static const ARTICLE = "/article/:aid";
   static const INFO = "/info";
@@ -25,6 +28,11 @@ abstract class AppRoutes {
 
 class AppPages {
   static var list = [
+    GetPage(
+      name: AppRoutes.SPLASH,
+      page: () => SplashScreen(),
+      binding: SplashBinding(),
+    ),
     GetPage(
       name: AppRoutes.HOME,
       page: () => IndexPage(),

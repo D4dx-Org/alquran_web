@@ -42,7 +42,6 @@ dependencies:
   flutter_widget_from_html: ^0.16.0
   numberpicker: ^2.1.2
   archive: ^4.0.3
-  flutter_native_splash: ^2.4.4
   scroll_to_index: ^3.0.1
   share_plus: ^10.1.4
 

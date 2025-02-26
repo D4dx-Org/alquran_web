@@ -1,14 +1,12 @@
 import 'package:alquran_malayalam/routes/routes.dart';
 import 'package:alquran_malayalam/themes/app_themes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 Future<void> main() async {
   await GetStorage.init();
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -20,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: "Al Quran Malayalam",
-      initialRoute: AppRoutes.HOME,
+      initialRoute: AppRoutes.SPLASH,
       getPages: AppPages.list,
       debugShowCheckedModeBanner: false,
       darkTheme: AppThemes.dark,
