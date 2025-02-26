@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/helpers/settings_helpers.dart';
 import 'package:alquran_malayalam/models/article.dart';
@@ -114,19 +114,7 @@ class ArticleView extends StatelessWidget {
   _getDescription(description) {
     return Container(
       margin: const EdgeInsets.only(top: 20.0),
-      child: Html(data: description, style: {
-        "h3": Style.fromTextStyle(TextStyle(
-          fontFamily: 'NotoSansMalayalam',
-          height: 2,
-          fontSize: SettingsHelpers.instance.getFontSizeMalayalam!,
-          color: const Color(0xFF00918E),
-        )),
-        "html": Style.fromTextStyle(TextStyle(
-            fontFamily: 'NotoSansMalayalam',
-            fontSize: artController.fontSizeMalayalam.value,
-            height: 1.5,
-            decoration: TextDecoration.none)),
-      }),
+      child: HtmlWidget(description),
     );
   }
 }

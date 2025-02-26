@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:get/get.dart';
 
 class InfoPage extends StatelessWidget {
   Color headColor = const Color(0xFF734E09);
@@ -8,8 +9,12 @@ class InfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Get.back(),
+          ),
           backgroundColor: headColor,
-          title: Text("Contact"),
+          title: Text("Contact", style: TextStyle(color: Colors.white)),
           elevation: 0,
         ),
         body: Container(
@@ -59,17 +64,8 @@ class _InfoState extends State<Info> with TickerProviderStateMixin {
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: <Widget>[
-            Html(
-                data:
-                    ("<p><strong>Meem Publications,</strong><br>M.S.S Building, Cherootty Road,<br>Kozhikkode.<br><br><br><strong>Contact Address:</strong><br>V.M. ABDUL MUJEEB<br>Pookkillath<br>P.O. Farook College,<br>Kozhikkode - 673632,<br>Kerala State, India.<br><br><br><strong>Email:</strong><br>vmamujeeb@reddifmail.com<br>vmamujeeb1@gmail.com<br><br><strong>Phone:+91 9847528856</strong></p><br>")
-                        .toString(),
-                style: {
-                  "html": Style.fromTextStyle(const TextStyle(
-                      fontFamily: 'NotoSansMalayalam',
-                      fontSize: 18.0,
-                      height: 1.5,
-                      decoration: TextDecoration.none)),
-                }),
+            HtmlWidget(
+                "<p><strong>Meem Publications,</strong><br>M.S.S Building, Cherootty Road,<br>Kozhikkode.<br><br><br><strong>Contact Address:</strong><br>V.M. ABDUL MUJEEB<br>Pookkillath<br>P.O. Farook College,<br>Kozhikkode - 673632,<br>Kerala State, India.<br><br><br><strong>Email:</strong><br>vmamujeeb@reddifmail.com<br>vmamujeeb1@gmail.com<br><br><strong>Phone:+91 9847528856</strong></p><br>"),
           ],
         ),
       )),
