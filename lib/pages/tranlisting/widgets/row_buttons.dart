@@ -21,32 +21,38 @@ class RowButtonsRow extends StatelessWidget {
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
-          color: Color.fromRGBO(6, 184, 219, 0.05),
+          color: Color.fromARGB(255, 240, 216, 172),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Container(
-                alignment: Alignment.center,
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(13.5),
-                  ),
-                  color: Color.fromRGBO(6, 184, 219, 1),
-                ),
-                child: Text(
-                  curTranLine.ayaNo.toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                    fontFamily: 'NotoSansMalayalam',
-                    fontSize: 15,
-                  ),
-                )),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(width: 10),
+                Container(
+                    alignment: Alignment.center,
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(13.5),
+                      ),
+                      color: Color(0xFF734E09),
+                    ),
+                    child: Text(
+                      curTranLine.ayaNo.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        fontFamily: 'NotoSansMalayalam',
+                        fontSize: 15,
+                      ),
+                    )),
+              ],
+            ),
             Align(
                 alignment: Alignment.centerRight,
                 child: Row(
@@ -75,7 +81,7 @@ class RowButtonsRow extends StatelessWidget {
                 subject: "Share Ayah Line");
           },
           icon: const Icon(Icons.share_outlined,
-              color: Color.fromRGBO(6, 184, 219, 1), size: 26),
+              color: Color(0xFF734E09), size: 26),
         ));
   }
 
@@ -87,7 +93,7 @@ class RowButtonsRow extends StatelessWidget {
             controller.bookmarkAyahLine(curTranLine);
           },
           icon: const Icon(Icons.bookmark_outline,
-              color: Color.fromRGBO(6, 184, 219, 1), size: 28),
+              color: Color(0xFF734E09), size: 28),
         ));
   }
 }
