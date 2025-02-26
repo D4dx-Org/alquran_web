@@ -84,6 +84,7 @@ flutter:
     - assets/img/bismi.png
     - assets/img/quran.png
     - assets/img/delete20.png
+    - assets/img/app_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
