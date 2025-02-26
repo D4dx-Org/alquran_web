@@ -1,5 +1,6 @@
 import 'package:alquran_malayalam/pages/bookmarks/bookmarks_page.dart';
 import 'package:alquran_malayalam/pages/index/components/surah_listing.dart';
+import 'package:alquran_malayalam/pages/index/components/juz_listing.dart';
 import 'package:alquran_malayalam/widgets/search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,11 +81,15 @@ class IndexPage extends StatelessWidget {
                               ),
                       ),
                       // Juz Tab
-                      Center(
-                        child: Text(
-                          'Juz View Coming Soon',
-                          style: TextStyle(fontSize: 18),
-                        ),
+                      GetBuilder<IndexController>(
+                        init: controller,
+                        builder: (_) => controller.isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : JuzListing(
+                                juzList: controller.juzList,
+                              ),
                       ),
                       // Bookmarks Tab
                       GetBuilder<IndexController>(

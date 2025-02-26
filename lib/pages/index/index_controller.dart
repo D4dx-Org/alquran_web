@@ -1,5 +1,7 @@
 import 'package:alquran_malayalam/helpers/settings_helpers.dart';
 import 'package:alquran_malayalam/models/surah.dart';
+import 'package:alquran_malayalam/models/juz.dart';
+import 'package:alquran_malayalam/helpers/json_helper.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
 import 'package:alquran_malayalam/services/dbservice.dart';
@@ -8,7 +10,9 @@ import 'package:alquran_malayalam/services/surah_services.dart';
 class IndexController extends GetxController {
   DBService dbService = DBService();
   SurahServices surahServices = SurahServices();
+  JsonParser jsonParser = JsonParser();
   List<Surah> surahs = [];
+  List<Juz> juzList = [];
   bool isLoading = true;
   Rxn<Surah> selectedSurah = Rxn<Surah>();
   RxInt selAyahNo = 1.obs;
@@ -24,6 +28,7 @@ class IndexController extends GetxController {
   loadDB() async {
     await dbService.openDB();
     loadSurahs();
+    loadJuzData();
   }
 
   Surah getSurah(int id) {
@@ -45,6 +50,30 @@ class IndexController extends GetxController {
     } catch (e) {
       //  print(e);
     }
+  }
+
+  loadJuzData() async {
+    try {
+      juzList = await jsonParser.loadJuzData();
+      update();
+    } catch (e) {
+      // print(e);
+    }
+  }
+
+  // Get surahs for a specific juz
+  List<Surah> getSurahsForJuz(int juzNumber) {
+    if (juzList.isEmpty) return [];
+
+    Juz juz = juzList.firstWhere((j) => j.juzNumber == juzNumber);
+    List<Surah> juzSurahs = [];
+
+    juz.chapters.forEach((chapterNumber, verseRange) {
+      Surah surah = getSurah(chapterNumber);
+      juzSurahs.add(surah);
+    });
+
+    return juzSurahs;
   }
 
   selectSurah(Surah surah) async {
