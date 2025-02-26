@@ -13,19 +13,19 @@ class BookmarksPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFF734E09),
-          foregroundColor: Color(0xFFFFFFFF),
-          title: Text("Bookmarks"),
-          actions: [
-            IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  controller.removeAllBookmarks();
-                })
-          ],
-          elevation: 0,
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: Color(0xFF734E09),
+        //   foregroundColor: Color(0xFFFFFFFF),
+        //   title: Text("Bookmarks"),
+        //   actions: [
+        //     IconButton(
+        //         icon: const Icon(Icons.delete),
+        //         onPressed: () {
+        //           controller.removeAllBookmarks();
+        //         })
+        //   ],
+        //   elevation: 0,
+        // ),
         body: GetBuilder<BookmarksController>(
             init: controller,
             builder: (_) => controller.isLoading
@@ -37,6 +37,16 @@ class BookmarksPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                controller.removeAllBookmarks();
+                              }),
+                        ],
+                      ),
                       Expanded(
                           child: BookmarksListing(
                         bookmarks: controller.bookmarks.value,
