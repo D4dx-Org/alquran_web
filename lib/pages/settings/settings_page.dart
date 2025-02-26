@@ -54,7 +54,7 @@ class SettingsView extends StatelessWidget {
                       'FONT SIZE',
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        color: Color.fromRGBO(170, 170, 170, 1),
+                        color: Colors.black,
                         fontFamily: 'Lato',
                         fontSize: 14,
                       ),
