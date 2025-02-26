@@ -10,14 +10,22 @@ class SurahListing extends StatelessWidget {
   SurahListing({super.key, required this.surahs});
 
   Widget _buildSurahItemView({required Surah surah, required int index}) {
-    int j = index;
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      child: Container(
-          color: (j % 2 == 0) ? Colors.white24 : Colors.white,
-          child: ListTile(
-            contentPadding: const EdgeInsets.only(left: 4, right: 1),
-            leading: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        onTap: () {
+          controller.selectSurah(surah);
+          controller.loadSuraDetailPage(surah.suraId, ayaNo: 1);
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
               CircleAvatar(
                 backgroundColor: Colors.transparent,
                 backgroundImage: const ExactAssetImage('assets/img/numbg.png'),
@@ -26,86 +34,73 @@ class SurahListing extends StatelessWidget {
                   child: Text(
                     surah.suraId.toString(),
                     style: const TextStyle(
-                        fontFamily: 'NotoSansMalayalam',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF303030)),
+                      fontFamily: 'NotoSansMalayalam',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF303030),
+                    ),
                   ),
                 ),
               ),
-            ]),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    (index == 0)
-                        ? const Padding(padding: EdgeInsets.only(top: 8.0))
-                        : const Padding(padding: EdgeInsets.only(top: 0.0)),
+                  children: [
                     Text(
                       surah.mSuraName,
                       style: const TextStyle(
-                          fontFamily: 'NotoSansMalayalam',
-                          fontSize: 14.0,
-                          color: Color(0xFF303030),
-                          fontWeight: FontWeight.w600),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Image(
-                            image: (surah.suraType == 'مَكِّيَة')
-                                ? const ExactAssetImage('assets/img/macca.png')
-                                : const ExactAssetImage(
-                                    'assets/img/madina.png'),
+                      children: [
+                        Image(
+                          image: (surah.suraType == 'مَكِّيَة')
+                              ? const ExactAssetImage('assets/img/macca.png')
+                              : const ExactAssetImage('assets/img/madina.png'),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${surah.totalAyas} Ayat',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
                           ),
-                          Text(
-                            ' . ${surah.totalAyas} Verses',
-                            style: const TextStyle(
-                              fontFamily: 'NotoSansMalayalam',
-                              fontSize: 12.0,
-                              height: 1.5,
-                              color: Color(0xFF8789A3),
-                            ),
-                          ),
-                        ]),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                Text(
-                  surah.aSuraName.replaceAll(' سورة ', ' '),
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.right,
-                  style: const TextStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: 20.0,
-                      height: 2.0,
-                      color: Color(0xFF303030),
-                      fontWeight: FontWeight.bold),
+              ),
+              Text(
+                surah.aSuraName.replaceAll(' سورة ', ' '),
+                style: const TextStyle(
+                  fontFamily: 'AmiriQuran',
+                  fontSize: 20,
+                  color: Color(0xFF734E09),
                 ),
-              ],
-            ),
-            trailing: Container(
-                child: IconButton(
-                    icon: const Icon(Icons.low_priority),
-                    color: const Color(0xFF734E09),
-                    onPressed: () {
-                      AyahPickerDialog ayahPickerDialog = AyahPickerDialog(
-                          onOkPressed: () async {
-                            Get.back();
-                            controller.selectSurah(surah);
-                            controller.loadSuraDetailPage(surah.suraId,
-                                ayaNo: controller.selAyahNo.value);
-                          },
-                          cSurah: surah);
-                      ayahPickerDialog.showAyaNoDialog();
-                    })),
-          )),
-      onTap: () async {
-        controller.selectSurah(surah);
-        controller.loadSuraDetailPage(surah.suraId);
-      },
+              ),
+              IconButton(
+                icon: const Icon(Icons.low_priority),
+                color: const Color(0xFF734E09),
+                onPressed: () {
+                  AyahPickerDialog ayahPickerDialog = AyahPickerDialog(
+                    onOkPressed: () async {
+                      Get.back();
+                      controller.loadSuraDetailPage(surah.suraId,
+                          ayaNo: controller.selAyahNo.value);
+                    },
+                    cSurah: surah,
+                  );
+                  ayahPickerDialog.showAyaNoDialog();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

@@ -120,22 +120,26 @@ class JuzListing extends StatelessWidget {
           child: Row(
             children: [
               // Surah number circle
-              Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFEEEEEE),
-                ),
-                child: Center(
-                  child: Text(
-                    surah.suraId.toString(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF734E09),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    backgroundImage:
+                        const ExactAssetImage('assets/img/numbg.png'),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 3.0),
+                      child: Text(
+                        surah.suraId.toString(),
+                        style: const TextStyle(
+                            fontFamily: 'NotoSansMalayalam',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF303030)),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
               const SizedBox(width: 16),
               // Surah details
@@ -153,10 +157,9 @@ class JuzListing extends StatelessWidget {
                     Row(
                       children: [
                         Image(
-                          image: (surah.suraType == 'مَكِّيَة')
+                          image: (surah.suraType == 'مَكِّيَة')
                               ? const ExactAssetImage('assets/img/macca.png')
                               : const ExactAssetImage('assets/img/madina.png'),
-                          height: 16,
                         ),
                         const SizedBox(width: 8),
                         Text(
