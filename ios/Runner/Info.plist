@@ -6,6 +6,8 @@
 		<true/>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>This app requires microphone access due to third-party SDKs.</string>
 		<key>CFBundleDisplayName</key>
 		<string>Al Quran Malayalam</string>
 		<key>CFBundleExecutable</key>

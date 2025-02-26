@@ -37,7 +37,7 @@ class JuzListing extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 211, 210, 210),
+        color: const Color.fromRGBO(211, 211, 211, 1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
