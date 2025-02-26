@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:alquran_malayalam/models/bookmark.dart';
 import 'package:alquran_malayalam/models/transl.dart';
 import 'package:alquran_malayalam/services/bookmark_services.dart';
@@ -236,6 +238,7 @@ class TranListingController extends GetxController {
     bookmarksServices.createBookmark(tranbk);
     Get.snackbar('Verse Bookmarked', 'Bookmark added in Bookmarks page!',
         snackPosition: SnackPosition.BOTTOM);
+    log("Bookmark added: $tranbk");
   }
 
   Future _scrollToIndex(int cIndex) async {
