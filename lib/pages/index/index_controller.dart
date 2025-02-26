@@ -13,6 +13,7 @@ class IndexController extends GetxController {
   Rxn<Surah> selectedSurah = Rxn<Surah>();
   RxInt selAyahNo = 1.obs;
   RxBool isSearching = false.obs;
+  RxInt selectedTabIndex = 0.obs;
 
   @override
   void onInit() {

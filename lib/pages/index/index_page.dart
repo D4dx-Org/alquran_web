@@ -1,5 +1,5 @@
-import 'package:alquran_malayalam/routes/routes.dart';
-import 'package:alquran_malayalam/widgets/ayah_picker.dart';
+import 'package:alquran_malayalam/pages/bookmarks/bookmarks_page.dart';
+import 'package:alquran_malayalam/pages/index/components/surah_listing.dart';
 import 'package:alquran_malayalam/widgets/search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +14,9 @@ class IndexPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
         drawer: MyDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xFF734E09),
@@ -24,11 +26,6 @@ class IndexPage extends StatelessWidget {
           ),
           elevation: 0,
           actions: [
-            IconButton(
-                icon: const Icon(Icons.bookmark),
-                onPressed: () {
-                  Get.toNamed(AppRoutes.BOOKMARKS, preventDuplicates: true);
-                }),
             Obx(() => IconButton(
                   icon: (!controller.isSearching.value)
                       ? const Icon(
@@ -49,159 +46,135 @@ class IndexPage extends StatelessWidget {
                 )),
           ],
         ),
-        body: GetBuilder<IndexController>(
-          init: controller,
-          builder: (_) => controller.isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Obx(
-                      () => (!controller.isSearching.value)
-                          ? Container()
-                          : SearchWidget(),
-                    ),
-                    Expanded(
-                      child: SurahListing(
-                        surahs: controller.surahs,
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                SizedBox(height: 80), // Space for the floating tab bar
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      // Surah Tab
+                      GetBuilder<IndexController>(
+                        init: controller,
+                        builder: (_) => controller.isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Obx(
+                                    () => (!controller.isSearching.value)
+                                        ? Container()
+                                        : SearchWidget(),
+                                  ),
+                                  Expanded(
+                                    child: SurahListing(
+                                      surahs: controller.surahs,
+                                    ),
+                                  )
+                                ],
+                              ),
                       ),
-                    )
-                  ],
-                ),
-        ));
-  }
-}
-
-class SurahListing extends StatelessWidget {
-  final List<Surah> surahs;
-  final IndexController controller = Get.find();
-  SurahListing({super.key, required this.surahs});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(5.0),
-      itemCount: surahs.length,
-      separatorBuilder: (context, index) => const Divider(height: 1),
-      itemBuilder: (context, index) {
-        return SurahItemView(
-          surah: surahs[index],
-          index: index,
-        );
-      },
-    );
-  }
-}
-
-class SurahItemView extends StatelessWidget {
-  final Surah surah;
-  final index;
-  final IndexController controller = Get.find();
-  SurahItemView({required this.surah, required this.index});
-
-  @override
-  Widget build(BuildContext context) {
-    int j = index;
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      child: Container(
-          color: (j % 2 == 0) ? Colors.white24 : Colors.white,
-          child: ListTile(
-            contentPadding: const EdgeInsets.only(left: 4, right: 1),
-            leading: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-              CircleAvatar(
-                backgroundColor: Colors.transparent,
-                backgroundImage: const ExactAssetImage('assets/img/numbg.png'),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 3.0),
-                  child: Text(
-                    surah.suraId.toString(),
-                    style: const TextStyle(
-                        fontFamily: 'NotoSansMalayalam',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF303030)),
+                      // Juz Tab
+                      Center(
+                        child: Text(
+                          'Juz View Coming Soon',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      // Bookmarks Tab
+                      GetBuilder<IndexController>(
+                        init: controller,
+                        builder: (_) => controller.isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : BookmarksPage(),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-            ]),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    (index == 0)
-                        ? const Padding(padding: EdgeInsets.only(top: 8.0))
-                        : const Padding(padding: EdgeInsets.only(top: 0.0)),
-                    Text(
-                      surah.mSuraName,
-                      style: const TextStyle(
-                          fontFamily: 'NotoSansMalayalam',
-                          fontSize: 14.0,
-                          color: Color(0xFF303030),
-                          fontWeight: FontWeight.w600),
-                    ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Image(
-                            image: (surah.suraType == 'مَكِّيَة')
-                                ? const ExactAssetImage('assets/img/macca.png')
-                                : const ExactAssetImage(
-                                    'assets/img/madina.png'),
-                          ),
-                          Text(
-                            ' . ${surah.totalAyas} Verses',
-                            style: const TextStyle(
-                              fontFamily: 'NotoSansMalayalam',
-                              fontSize: 12.0,
-                              height: 1.5,
-                              color: Color(0xFF8789A3),
-                            ),
-                          ),
-                        ]),
-                  ],
-                ),
-                Text(
-                  surah.aSuraName.replaceAll(' سورة ', ' '),
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.right,
-                  style: const TextStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: 20.0,
-                      height: 2.0,
-                      color: Color(0xFF303030),
-                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            trailing: Container(
-                // color: Color(0xFFFFFBEE),
-                child: IconButton(
-                    icon: const Icon(Icons.low_priority),
-                    color:
-                        Color(0xFF734E09), // Color.fromARGB(255, 244, 203, 53),
-                    onPressed: () {
-                      AyahPickerDialog ayahPickerDialog = AyahPickerDialog(
-                          onOkPressed: () async {
-                            Get.back();
-                            controller.selectSurah(surah);
-                            controller.loadSuraDetailPage(surah.suraId,
-                                ayaNo: controller.selAyahNo.value);
-                          },
-                          cSurah: surah);
-                      ayahPickerDialog.showAyaNoDialog();
-                    })),
-          )),
-      onTap: () async {
-        controller.selectSurah(surah);
-        controller.loadSuraDetailPage(surah.suraId);
-      },
+            Positioned(
+              top: 16,
+              left: 16,
+              right: 16,
+              child: _buildCustomTabBar(),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  Widget _buildCustomTabBar() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TabBar(
+        onTap: (index) {
+          controller.selectedTabIndex.value = index;
+        },
+        tabs: [
+          _buildTab(
+            icon: Icons.star_border_rounded,
+            label: 'Surat',
+            index: 0,
+          ),
+          _buildTab(
+            icon: Icons.menu_book_outlined,
+            label: 'Juz',
+            index: 1,
+          ),
+          _buildTab(
+            icon: Icons.bookmark_border,
+            label: 'Bookmarks',
+            index: 2,
+          ),
+        ],
+        indicator: BoxDecoration(),
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.grey.shade700,
+        indicatorSize: TabBarIndicatorSize.label,
+        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        labelPadding: EdgeInsets.zero,
+        dividerColor: Colors.transparent,
+      ),
+    );
+  }
+
+  Widget _buildTab({
+    required IconData icon,
+    required String label,
+    required int index,
+  }) {
+    return Obx(() {
+      final isSelected = controller.selectedTabIndex.value == index;
+      return Tab(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFF734E09) : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            border:
+                !isSelected ? Border.all(color: Colors.grey.shade300) : null,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon),
+              SizedBox(width: 4),
+              Text(label),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
