@@ -23,7 +23,7 @@ class MyDrawer extends StatelessWidget {
                 child: const DrawerHeader(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: ExactAssetImage("assets/img/splashlogo.png"),
+                      image: ExactAssetImage("assets/img/app_logo.png"),
                       fit: BoxFit.fitHeight,
                     ),
                   ),
