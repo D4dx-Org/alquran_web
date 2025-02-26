@@ -37,7 +37,7 @@ class JuzListing extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: const Color.fromARGB(255, 211, 210, 210),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -87,6 +87,8 @@ class JuzListing extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF734E09),
               foregroundColor: Colors.white,
+              minimumSize: const Size(100, 36),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
