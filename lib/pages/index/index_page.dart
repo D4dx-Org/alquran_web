@@ -119,8 +119,18 @@ class IndexPage extends StatelessWidget {
 
   Widget _buildCustomTabBar() {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
       child: TabBar(
         onTap: (index) {
@@ -143,12 +153,17 @@ class IndexPage extends StatelessWidget {
             index: 2,
           ),
         ],
-        indicator: BoxDecoration(),
+        indicator: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF734E09), Color(0xFFB57B3E)],
+          ),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        unselectedLabelColor: Colors.black,
         labelColor: Colors.white,
-        unselectedLabelColor: Colors.grey.shade700,
-        indicatorSize: TabBarIndicatorSize.label,
-        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-        labelPadding: EdgeInsets.zero,
+        indicatorSize: TabBarIndicatorSize.tab,
+        padding: EdgeInsets.all(4),
+        labelPadding: EdgeInsets.symmetric(horizontal: 2),
         dividerColor: Colors.transparent,
       ),
     );
@@ -163,13 +178,7 @@ class IndexPage extends StatelessWidget {
       final isSelected = controller.selectedTabIndex.value == index;
       return Tab(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF734E09) : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-            border:
-                !isSelected ? Border.all(color: Colors.grey.shade300) : null,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
