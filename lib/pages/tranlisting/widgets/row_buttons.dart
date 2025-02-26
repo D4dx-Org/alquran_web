@@ -2,7 +2,7 @@ import 'package:alquran_malayalam/pages/tranlisting/tranlisting_controller.dart'
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 //import 'package:iconly/iconly.dart';
-import 'package:share_extend/share_extend.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:alquran_malayalam/models/transl.dart';
 
 class RowButtonsRow extends StatelessWidget {
@@ -70,10 +70,9 @@ class RowButtonsRow extends StatelessWidget {
             String suraNameNo =
                 '${curTranLine.suraNo}:${curTranLine.ayaNo} - Ayah part ';
             String siteLink = "https://alquranmalayalam.net";
-            await ShareExtend.share(
+            await Share.share(
                 "$suraNameNo\n\n${curTranLine.arabWords.replaceAll('#', ' ')}\n\n${curTranLine.malTran}\n\n$siteLink",
-                'text',
-                sharePanelTitle: "Share Ayah Line");
+                subject: "Share Ayah Line");
           },
           icon: const Icon(Icons.share_outlined,
               color: Color.fromRGBO(6, 184, 219, 1), size: 26),
