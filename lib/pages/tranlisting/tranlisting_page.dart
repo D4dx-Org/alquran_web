@@ -213,20 +213,22 @@ class TranLineView extends StatelessWidget {
     return controller.wrapScrollTag(
       index: j,
       child: ListTile(
-          contentPadding: const EdgeInsets.only(left: 1, right: 1, bottom: 8),
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                  padding: const EdgeInsets.only(
-                    top: 4.0,
-                  ),
-                  alignment: Alignment.topRight,
-                  child: _viewTranLineWidget(tranLine, j)),
-            ],
-          ),
-          onTap: (() => isSelected.value = !isSelected.value)),
+        contentPadding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.only(
+                top: 4.0,
+              ),
+              alignment: Alignment.topRight,
+              child: _viewTranLineWidget(tranLine, j),
+            ),
+          ],
+        ),
+        onTap: (() => isSelected.value = !isSelected.value),
+      ),
     );
   }
 
@@ -247,8 +249,8 @@ class TranLineView extends StatelessWidget {
         Container(
           alignment: Alignment.topRight,
           child: Wrap(
-            spacing: 3.0,
-            runSpacing: 3.0,
+            spacing: 8.0,
+            runSpacing: 8.0,
             textDirection: TextDirection.rtl,
             children: _getWordChips(arabWords, malWords),
           ),
@@ -320,6 +322,11 @@ class TranLineView extends StatelessWidget {
   wordChip(String arabWord, String malWord) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.all(4.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -329,9 +336,10 @@ class TranLineView extends StatelessWidget {
               fontFamily: 'AmiriQuran',
               fontSize: controller.fontSizeArabic.value,
               fontWeight: FontWeight.w600,
+              height: 2,
             ),
           ),
-          const SizedBox(height: 4.0),
+          const SizedBox(height: 5.0),
           Text(
             malWord,
             style: TextStyle(
