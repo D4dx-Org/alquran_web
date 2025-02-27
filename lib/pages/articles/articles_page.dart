@@ -97,11 +97,13 @@ class ArticleView extends StatelessWidget {
     );
   }
 
-
   _getDescription(description) {
     return Container(
       margin: const EdgeInsets.only(top: 20.0),
-      child: HtmlWidget(description),
+      child: HtmlWidget(
+        description,
+        textStyle: const TextStyle(fontSize: 18),
+      ),
     );
   }
 }
