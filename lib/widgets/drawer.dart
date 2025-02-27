@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
+import 'package:alquran_malayalam/helpers/constants.dart';
 
 class MyDrawer extends StatelessWidget {
   Color iconColor = const Color(0xFF734E09); // Color(0xFF303030);
@@ -110,6 +111,14 @@ class MyDrawer extends StatelessWidget {
                       ),
                 ],
               )),
+          Container(
+            padding: const EdgeInsets.all(10.0),
+            alignment: Alignment.center,
+            child: Text(
+              "Version $appVersion",
+              style: TextStyle(fontSize: 14, color: iconColor),
+            ),
+          )
         ]));
   }
 
