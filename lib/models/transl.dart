@@ -1,4 +1,3 @@
-import 'package:alquran_malayalam/models/lineword.dart';
 
 class TranLine {
   static const db_lineid = "line_id";

@@ -175,7 +175,6 @@ class IndexPage extends StatelessWidget {
     required int index,
   }) {
     return Obx(() {
-      final isSelected = controller.selectedTabIndex.value == index;
       return Tab(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),

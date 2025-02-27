@@ -1,4 +1,3 @@
-import 'package:alquran_malayalam/helpers/settings_helpers.dart';
 import 'package:alquran_malayalam/models/surah.dart';
 import 'package:alquran_malayalam/models/juz.dart';
 import 'package:alquran_malayalam/helpers/json_helper.dart';

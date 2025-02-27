@@ -1,9 +1,7 @@
 import 'package:alquran_malayalam/models/transl.dart';
 import 'package:alquran_malayalam/pages/tranlisting/widgets/row_buttons.dart';
 import 'package:alquran_malayalam/widgets/ayah_picker.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/pages/tranlisting/tranlisting_controller.dart';
 import 'package:alquran_malayalam/models/surah.dart';

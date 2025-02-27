@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
-import 'package:alquran_malayalam/helpers/settings_helpers.dart';
 import 'package:alquran_malayalam/models/article.dart';
 import 'package:alquran_malayalam/pages/articles/articles_controller.dart';
 
@@ -98,18 +97,6 @@ class ArticleView extends StatelessWidget {
     );
   }
 
-  _getTittle(tittle) {
-    return Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: Text(
-          tittle,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: SettingsHelpers.instance.getFontSizeMalayalam!,
-            color: const Color(0xFF00918E),
-          ),
-        ));
-  }
 
   _getDescription(description) {
     return Container(

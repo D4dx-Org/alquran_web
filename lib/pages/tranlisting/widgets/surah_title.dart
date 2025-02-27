@@ -125,33 +125,4 @@ class SuraTitleWidget extends StatelessWidget {
     ]);
   }
 
-  Widget _loadBismi() {
-    const String bismiAText = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
-    const String bismiMText =
-        'കാരുണ്യവാനും കരുണാവാരിധിയുമായ അല്ലാഹുവിന്റെ നാമത്തില്‍ ';
-
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.only(top: 15.0),
-        ),
-        const Text(bismiAText,
-            style: TextStyle(
-                fontFamily: 'AmiriQuran',
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold)),
-        const Text(
-          bismiMText,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontFamily: 'NotoSansMalayalam',
-            fontSize: 14.0,
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(top: 15.0),
-        ),
-      ],
-    );
-  }
 }

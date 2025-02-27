@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:alquran_malayalam/helpers/settings_helpers.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
 
 class MyDrawer extends StatelessWidget {
