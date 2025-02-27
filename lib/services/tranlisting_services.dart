@@ -1,5 +1,6 @@
 import 'package:alquran_malayalam/models/transl.dart';
 import 'package:alquran_malayalam/services/dbservice.dart';
+import 'dart:developer';
 
 class TranListingServices {
   final dbProvider = DBService.dbProvider;
@@ -22,12 +23,23 @@ class TranListingServices {
     String searchSql = '';
     String whereStr = '';
     if (suraNo > 0) {
-      searchSql = "AND sura_no=$suraNo ";
-      whereStr = "AND aya_no BETWEEN $startAyaNo AND $endAyaNo ";
+      searchSql = "AND tw.sura_no=$suraNo ";
+      whereStr = "AND tw.aya_no BETWEEN $startAyaNo AND $endAyaNo ";
     }
     try {
-      result = await db.rawQuery(
-          "SELECT line_id, sura_no, aya_no, malay_meaning, malwords, arabwords FROM trans_words  WHERE 1=1 $searchSql $whereStr ORDER BY sura_no, aya_no, line_id ");
+      log('Executing getTranLines query for suraNo: $suraNo with Aya range: $startAyaNo-$endAyaNo');
+      result = await db.rawQuery("""
+          SELECT tw.line_id, tw.sura_no, tw.aya_no, 
+                 GROUP_CONCAT(tw.arabwords) as arabwords,
+                 GROUP_CONCAT(tw.malwords) as malwords,
+                 l.malay_meaning
+          FROM trans_words tw
+          LEFT JOIN line l ON l.line_id = tw.line_id
+          WHERE 1=1 $searchSql $whereStr 
+          GROUP BY tw.line_id
+          ORDER BY tw.sura_no, tw.aya_no, tw.line_id
+      """);
+      log('Query returned "+result.length+" rows in getTranLines');
       List<TranLine> lines = result.isNotEmpty
           ? result.map((item) => TranLine.fromMap(item)).toList()
           : [];
@@ -42,6 +54,7 @@ class TranListingServices {
       }
       return lines;
     } catch (e) {
+      log('Error in getTranLines: ${e.toString()}');
       return Future.error(e);
     }
   }
@@ -54,8 +67,10 @@ class TranListingServices {
 
     whereStr = "AND malay_meaning LIKE '%$queryString%' ";
     try {
+      log('Executing getSearchTranLines with query: $queryString');
       result = await db.rawQuery(
-          "SELECT line_id, sura_no, aya_no, malay_meaning, '' AS malwords, '' AS arabwords FROM trans_words  WHERE 1=1 $whereStr ORDER BY sura_no, aya_no, line_id ");
+          "SELECT line_id, sura_no, aya_no, malay_meaning, '' AS malwords, '' AS arabwords FROM line  WHERE 1=1 $whereStr ORDER BY sura_no, aya_no, line_id ");
+      log('Query returned "+result.length+" rows in getSearchTranLines');
       List<TranLine> lines = result.isNotEmpty
           ? result.map((item) => TranLine.fromMap(item)).toList()
           : [];
@@ -70,6 +85,23 @@ class TranListingServices {
       }
       return lines;
     } catch (e) {
+      log('Error in getSearchTranLines: ${e.toString()}');
+      return Future.error(e);
+    }
+  }
+
+  Future<String?> getMalayMeaning({required int lineId}) async {
+    final db = await dbProvider.database;
+    try {
+      final result = await db.rawQuery(
+          "SELECT malay_meaning FROM line WHERE line_id = ?", [lineId]);
+      if (result.isNotEmpty) {
+        return result.first['malay_meaning'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log('Error in getMalayMeaning: "+e.toString()+"');
       return Future.error(e);
     }
   }

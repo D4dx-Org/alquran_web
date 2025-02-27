@@ -231,67 +231,47 @@ class TranLineView extends StatelessWidget {
   }
 
   _viewTranLineWidget(TranLine inTranLine, int index) {
-    List<String> arabWords = inTranLine.arabWords.split("#");
-    List<String> malWords = inTranLine.malWords.split("#");
-    bool malWordNull = (inTranLine.malWords == "");
+    List<String> arabWords = inTranLine.arabWords.split(",");
+    List<String> malWords = inTranLine.malWords.split(",");
+
     return Column(
       children: <Widget>[
-        (index == 0 &&
-                inTranLine.ayaNo == 1 &&
-                inTranLine.suraNo != 1 &&
-                inTranLine.suraNo != 9)
-            ? _loadBismi()
-            : const SizedBox(
-                height: 0,
-                width: 0,
-              ),
-        (malWordNull)
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                    Flexible(
-                      //constraints: BoxConstraints(maxWidth: Get.width * 0.5),
-                      child: Text(
-                        inTranLine.malTran,
-                        style: TextStyle(
-                          fontFamily: 'NotoSansMalayalam',
-                          fontSize: controller.fontSizeMalayalam.value,
-                          color: const Color(0xFF240F4F),
-                          // fontWeight: FontWeight.w600
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    wordChip(arabWords[0], ''),
-                  ])
-            : Container(
-                alignment: Alignment.topRight,
-                child: Wrap(
-                  spacing: 3.0, // gap between adjacent chips
-                  runSpacing: 3.0, // gap between lines
-                  textDirection: TextDirection.rtl,
-                  children: _getWordChips(arabWords, malWords),
-                ),
-              ),
+        // Show Bismillah if needed
+        if (index == 0 &&
+            inTranLine.ayaNo == 1 &&
+            inTranLine.suraNo != 1 &&
+            inTranLine.suraNo != 9)
+          _loadBismi(),
+
+        // Show word by word translation
+        Container(
+          alignment: Alignment.topRight,
+          child: Wrap(
+            spacing: 3.0,
+            runSpacing: 3.0,
+            textDirection: TextDirection.rtl,
+            children: _getWordChips(arabWords, malWords),
+          ),
+        ),
+        SizedBox(height: 10),
+        // Show translation text
+        Container(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          alignment: Alignment.topLeft,
+          child: Text(
+            inTranLine.malTran,
+            style: TextStyle(
+              fontFamily: 'NotoSansMalayalam',
+              fontSize: controller.fontSizeMalayalam.value,
+              color: const Color(0xFF240F4F),
+            ),
+            textAlign: TextAlign.left,
+          ),
+        ),
+
+        // Show action buttons if selected
         Obx(() => isSelected.value ? RowButtonsRow(tranLine) : Container()),
-        !(malWordNull)
-            ? Container(
-                padding: const EdgeInsets.only(top: 5.0),
-                alignment: Alignment.topLeft,
-                child: Text(
-                  inTranLine.malTran,
-                  style: TextStyle(
-                    fontFamily: 'NotoSansMalayalam',
-                    fontSize: controller.fontSizeMalayalam.value,
-                    color: const Color(0xFF240F4F),
-                    // fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.left,
-                ))
-            : const SizedBox(
-                height: 0,
-                width: 0,
-              ),
+        SizedBox(height: 8),
       ],
     );
   }
@@ -331,7 +311,6 @@ class TranLineView extends StatelessWidget {
 
   List<Widget> _getWordChips(List<String> arabWords, List<String> malWords) {
     var chipWidgets = <Widget>[];
-
     for (int i = 0; i < arabWords.length; i++) {
       chipWidgets.add(wordChip(arabWords[i], malWords[i]));
     }
@@ -339,48 +318,28 @@ class TranLineView extends StatelessWidget {
   }
 
   wordChip(String arabWord, String malWord) {
-    return Chip(
-      label: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          (malWord == "")
-              ? Container(
-                  constraints: const BoxConstraints(maxWidth: 140.0),
-                  child: Text(
-                    arabWord,
-                    style: TextStyle(
-                        fontFamily: 'AmiriQuran',
-                        fontSize: controller.fontSizeArabic.value,
-                        fontWeight: FontWeight.w600),
-                    softWrap: true,
-                    maxLines: 2,
-                  ))
-              : Text(
-                  arabWord,
-                  style: TextStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: controller.fontSizeArabic.value,
-                      fontWeight: FontWeight.w600),
-                ),
-          Container(
-            padding: const EdgeInsets.only(top: 10.0),
-            constraints: BoxConstraints(maxWidth: 82.0),
-            child: Text(
-              malWord,
-              style: TextStyle(
-                fontFamily: 'NotoSansMalayalam',
-                fontSize: controller.fontSizeMalayalam.value - 2,
-              ),
-              softWrap: true,
-              maxLines: 5,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            arabWord,
+            style: TextStyle(
+              fontFamily: 'AmiriQuran',
+              fontSize: controller.fontSizeArabic.value,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 4.0),
+          Text(
+            malWord,
+            style: TextStyle(
+              fontFamily: 'NotoSansMalayalam',
+              fontSize: controller.fontSizeMalayalam.value - 2,
             ),
           ),
         ],
-      ),
-      backgroundColor: Colors.grey[100],
-      side: BorderSide.none,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0),
       ),
     );
   }

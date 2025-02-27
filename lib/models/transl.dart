@@ -1,4 +1,3 @@
-
 class TranLine {
   static const db_lineid = "line_id";
   static const db_surano = "sura_no";
@@ -27,7 +26,7 @@ class TranLine {
         lineId: map[db_lineid],
         suraNo: map[db_surano],
         ayaNo: map[db_ayano],
-        malTran: map[db_malaymean],
+        malTran: map[db_malaymean] ?? '',
         arabWords: map[db_arabwords],
         malWords: map[db_malwords],
       );

@@ -174,20 +174,18 @@ class IndexPage extends StatelessWidget {
     required String label,
     required int index,
   }) {
-    return Obx(() {
-      return Tab(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon),
-              SizedBox(width: 4),
-              Text(label),
-            ],
-          ),
+    return Tab(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon),
+            SizedBox(width: 4),
+            Text(label),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 }
