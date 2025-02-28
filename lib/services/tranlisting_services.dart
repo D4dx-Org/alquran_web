@@ -96,7 +96,7 @@ class TranListingServices {
       final result = await db.rawQuery(
           "SELECT malay_meaning FROM line WHERE line_id = ?", [lineId]);
       if (result.isNotEmpty) {
-        return result.first['malay_meaning'];
+        return result.first['malay_meaning'] as String?;
       } else {
         return null;
       }
