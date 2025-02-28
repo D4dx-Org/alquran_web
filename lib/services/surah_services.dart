@@ -30,9 +30,9 @@ class SurahServices {
     final db = await dbProvider.database;
     try {
       var result =
-          await db?.rawQuery('SELECT * FROM suratable WHERE Sura_id = $id');
-      if (result.length == 0) return null;
-      return Surah.fromMap(result[0]);
+          await db.rawQuery('SELECT * FROM suratable WHERE Sura_id = $id');
+      if (result.isEmpty) return null;
+      return Surah.fromMap(result.first);
     } catch (e) {
       return Future.error(e);
     }
