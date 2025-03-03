@@ -36,6 +36,46 @@ class _MushafPageState extends State<MushafPage> {
     }
   }
 
+  Widget _buildSurahTitle(String surahName) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Text(
+        surahName,
+        style: const TextStyle(
+          fontFamily: 'AmiriQuran',
+          fontSize: 36.0,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF734E09),
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildBismillah() {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.only(top: 15.0),
+        ),
+        const Text(
+          'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+          style: TextStyle(
+            fontFamily: 'AmiriQuran',
+            fontSize: 24.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.only(top: 15.0),
+        ),
+        Container(
+          padding: const EdgeInsets.only(top: 15.0),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,6 +154,23 @@ class _MushafPageState extends State<MushafPage> {
 
                     return Column(
                       children: [
+                        // Check if this page contains the start of a new surah
+                        if (verses.isNotEmpty &&
+                            controller.isStartOfSurah(pageNumber, verses.first))
+                          Column(
+                            children: [
+                              _buildSurahTitle(controller.getSurahName(
+                                  int.parse(
+                                      verses.first.verseNumber.split(':')[0]))),
+                              if (int.parse(verses.first.verseNumber
+                                          .split(':')[0]) !=
+                                      1 &&
+                                  int.parse(verses.first.verseNumber
+                                          .split(':')[0]) !=
+                                      9)
+                                _buildBismillah(),
+                            ],
+                          ),
                         Container(
                           padding: const EdgeInsets.all(16),
                           width: double.infinity,
