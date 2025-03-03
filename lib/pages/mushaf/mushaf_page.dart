@@ -1,5 +1,4 @@
 import 'package:alquran_malayalam/routes/routes.dart';
-import 'package:alquran_malayalam/widgets/ayah_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
