@@ -7,11 +7,14 @@ class MushafController extends GetxController {
   final QuranComService _quranService = QuranComService();
   final JsonParser _jsonParser = JsonParser();
 
-  RxList<QuranVerse> verses = <QuranVerse>[].obs;
+  // Store verses by page number
+  final RxMap<int, List<QuranVerse>> versesByPage =
+      <int, List<QuranVerse>>{}.obs;
   RxInt currentPage = 1.obs;
   RxInt currentSurah = 1.obs;
   RxBool isLoading = false.obs;
   RxString error = ''.obs;
+  RxBool hasMorePages = true.obs;
 
   Map<int, List<int>>? pageToSurahMap;
 
@@ -25,14 +28,9 @@ class MushafController extends GetxController {
   Future<void> initializeController() async {
     try {
       await loadPageToSurahMapping();
-      ever(currentPage, (page) {
-        print('📄 Page changed to: $page');
-        updateSurahForPage(page as int);
-        fetchVerses();
-      });
       print('🔄 Initial fetch started');
       updateSurahForPage(currentPage.value);
-      await fetchVerses();
+      await loadNextPages();
     } catch (e) {
       print('❌ Error initializing controller: $e');
       error.value = 'Error initializing: $e';
@@ -63,51 +61,53 @@ class MushafController extends GetxController {
     }
   }
 
-  Future<void> fetchVerses() async {
+  Future<void> loadNextPages() async {
+    if (isLoading.value || !hasMorePages.value) return;
+
     try {
-      print(
-          '⏳ Starting to fetch verses - Page: ${currentPage.value}, Surah: ${currentSurah.value}');
+      print('⏳ Loading next pages starting from: ${currentPage.value}');
       isLoading.value = true;
       error.value = '';
 
-      final fetchedVerses = await _quranService.fetchAyas(
-        currentPage.value,
-        currentSurah.value,
-      );
+      // Load next 3 pages
+      for (int i = 0; i < 3; i++) {
+        int pageToLoad = currentPage.value + i;
 
-      print('📦 Fetched verses count: ${fetchedVerses.length}');
-      print(
-          '🔍 First verse: ${fetchedVerses.isNotEmpty ? fetchedVerses.first.verseNumber : "none"}');
+        if (pageToSurahMap != null &&
+            !pageToSurahMap!.containsKey(pageToLoad)) {
+          hasMorePages.value = false;
+          break;
+        }
 
-      if (fetchedVerses.isEmpty) {
-        print('⚠️ No verses found for this page');
-        error.value = 'No verses found for this page';
-        return;
+        updateSurahForPage(pageToLoad);
+        final fetchedVerses = await _quranService.fetchAyas(
+          pageToLoad,
+          currentSurah.value,
+        );
+
+        if (fetchedVerses.isEmpty) {
+          hasMorePages.value = false;
+          break;
+        }
+
+        versesByPage[pageToLoad] = fetchedVerses;
+        print('📦 Loaded page $pageToLoad with ${fetchedVerses.length} verses');
       }
 
-      verses.value = fetchedVerses;
-      print('✅ Verses updated successfully');
+      currentPage.value += 3;
     } catch (e) {
-      print('❌ Error fetching verses: $e');
-      error.value = 'Error loading verses: $e';
+      print('❌ Error loading pages: $e');
+      error.value = 'Error loading pages: $e';
     } finally {
       isLoading.value = false;
       print(
-          '🏁 Fetch operation completed - Loading: ${isLoading.value}, Error: ${error.value}');
+          '🏁 Page loading completed - Total pages loaded: ${versesByPage.length}');
     }
   }
 
-  void nextPage() {
-    print('➡️ Next page requested: ${currentPage.value + 1}');
-    currentPage.value++;
-  }
-
-  void previousPage() {
-    if (currentPage.value > 1) {
-      print('⬅️ Previous page requested: ${currentPage.value - 1}');
-      currentPage.value--;
-    } else {
-      print('⚠️ Cannot go to previous page: already at page 1');
-    }
+  bool shouldLoadMore(int currentPageIndex) {
+    return currentPageIndex >= versesByPage.length - 2 &&
+        hasMorePages.value &&
+        !isLoading.value;
   }
 }
