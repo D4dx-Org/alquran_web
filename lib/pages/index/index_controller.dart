@@ -3,11 +3,11 @@ import 'package:alquran_malayalam/models/juz.dart';
 import 'package:alquran_malayalam/helpers/json_helper.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
-import 'package:alquran_malayalam/services/dbservice.dart';
+import 'package:alquran_malayalam/services/api_service/quran_service.dart';
 import 'package:alquran_malayalam/services/surah_services.dart';
 
 class IndexController extends GetxController {
-  DBService dbService = DBService();
+  QuranService quranService = QuranService();
   SurahServices surahServices = SurahServices();
   JsonParser jsonParser = JsonParser();
   List<Surah> surahs = [];
@@ -25,9 +25,17 @@ class IndexController extends GetxController {
   }
 
   loadDB() async {
-    await dbService.openDB();
-    loadSurahs();
-    loadJuzData();
+    try {
+      print('Starting to load database...');
+      await loadSurahs();
+      print('Surahs loaded successfully');
+      await loadJuzData();
+      print('Juz data loaded successfully');
+    } catch (e) {
+      print('Error loading database: $e');
+      isLoading = false;
+      update();
+    }
   }
 
   Surah getSurah(int id) {
@@ -36,27 +44,46 @@ class IndexController extends GetxController {
 
   loadSurahs() async {
     try {
+      print('Loading surahs...');
       isLoading = true;
       update();
-      List list = await surahServices.getSurahs();
-      for (var element in list) {
-        surahs.add(Surah.fromMap(element));
-      }
 
+      final List<Surah> list = await surahServices.getSurahs();
+      print('Received ${list.length} surahs from service');
+
+      surahs.clear(); // Clear existing data before adding new
+      surahs.addAll(list); // Add all surahs to the list
+
+      print('Processed ${surahs.length} surahs');
       isLoading = false;
-      selectSurah(surahs.first);
+      if (surahs.isNotEmpty) {
+        selectSurah(surahs.first);
+      }
       update();
     } catch (e) {
-      //  print(e);
+      print('Error loading surahs: $e');
+      isLoading = false;
+      update();
+      throw e; // Rethrow to handle in loadDB
     }
   }
 
   loadJuzData() async {
     try {
+      print('Loading juz data...');
+      isLoading = true;
+      update();
+
       juzList = await jsonParser.loadJuzData();
+      print('Loaded ${juzList.length} juz entries');
+
+      isLoading = false;
       update();
     } catch (e) {
-      // print(e);
+      print('Error loading juz data: $e');
+      isLoading = false;
+      update();
+      throw e; // Rethrow to handle in loadDB
     }
   }
 

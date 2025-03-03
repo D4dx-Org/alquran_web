@@ -25,13 +25,13 @@ class Surah {
       required this.totalLines});
 
   factory Surah.fromMap(Map<String, dynamic> map) => Surah(
-        suraId: map[db_suraid],
+        suraId: int.parse(map[db_suraid].toString()),
         aSuraName: map[db_asuraname],
         mSuraName: map[db_msuraname],
         suraType: map[db_suratype],
         malMean: map[db_malmean],
-        totalAyas: map[db_totalayas],
-        totalLines: map[db_totallines],
+        totalAyas: int.parse(map[db_totalayas].toString()),
+        totalLines: int.parse(map[db_totallines].toString()),
       );
 
   // Currently not used

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:alquran_malayalam/models/bookmark.dart';
 import 'package:alquran_malayalam/models/transl.dart';
+import 'package:alquran_malayalam/services/api_service/quran_service.dart';
 import 'package:alquran_malayalam/services/bookmark_services.dart';
 import 'package:alquran_malayalam/services/tranlisting_services.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,10 @@ import 'package:alquran_malayalam/helpers/settings_helpers.dart';
 import 'package:alquran_malayalam/models/surah.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/pages/index/index_controller.dart';
-import 'package:alquran_malayalam/services/dbservice.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 class TranListingController extends GetxController {
-  DBService dbService = DBService();
+  QuranService quranService = QuranService();
   TranListingServices tranListingServices = TranListingServices();
   RxList<TranLine> tranLineList = <TranLine>[].obs;
   bool isLoading = true;
@@ -112,7 +112,6 @@ class TranListingController extends GetxController {
       maxPageNo = (selSurah.totalAyas / _perPage).ceil();
     }
 
-    await dbService.openDB();
     if (data != null && data.length > 1) {
       curAyaNo = data[1];
       if (curAyaNo > 1) {

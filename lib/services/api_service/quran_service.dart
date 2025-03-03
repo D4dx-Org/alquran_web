@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class QuranService {
   final String baseUrl = "https://alquranmalayalam.net/alquran-api";
@@ -10,6 +11,7 @@ class QuranService {
   var AyaNumber = 1;
   var pageNumber = 0;
   String searchword = '';
+  final Dio _dio = Dio();
 
   Future<List<Map<String, dynamic>>> fetchSurahs() async {
     final response = await http.get(Uri.parse("$baseUrl/suranames"));
@@ -18,13 +20,13 @@ class QuranService {
       return data
           .map(
             (item) => {
-              "SuraId": item["SuraId"],
-              "ASuraName": item["ASuraName"],
-              "MSuraName": item["MSuraName"],
-              "SuraType": item["SuraType"],
-              "MalMean": item["MalMean"],
-              "TotalAyas": item["TotalAyas"],
-              "TotalLines": item["TotalLines"],
+              "SuraId": item["SuraId"].toString(),
+              "ASuraName": item["ASuraName"].toString(),
+              "MSuraName": item["MSuraName"].toString(),
+              "SuraType": item["SuraType"].toString(),
+              "MalMean": item["MalMean"].toString(),
+              "TotalAyas": item["TotalAyas"].toString(),
+              "TotalLines": item["TotalLines"].toString(),
             },
           )
           .toList();
@@ -45,28 +47,46 @@ class QuranService {
   }
 
   Future<List<Map<String, dynamic>>> fetchAyaLines(
-      int surahNumber, int currentPage) async {
-    pageNumber = currentPage;
-    final response = await http
-        .get(Uri.parse("$baseUrl/linetrans/$surahNumber/$pageNumber"));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body) as List<dynamic>;
-      return data.map((item) {
-        return {
-          "LineId": item["LineId"],
-          "SuraNo": item["SuraNo"],
-          "AyaNo": item["AyaNo"],
-          "MalTran": item["MalTran"],
-          "LineWords": (item["LineWords"] as List<dynamic>).map((wordItem) {
-            return {
-              "MalWord": wordItem["MalWord"],
-              "ArabWord": wordItem["ArabWord"],
-            };
-          }).toList(),
-        };
-      }).toList(); // Call toList() here
-    } else {
-      throw Exception('Failed to load Aya');
+      int suraNo, int pageNo) async {
+    try {
+      print('Fetching aya lines for Surah $suraNo, page $pageNo');
+      final response =
+          await http.get(Uri.parse("$baseUrl/ayalines/$suraNo/$pageNo"));
+
+      print('Response status: ${response.statusCode}');
+      // print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as List;
+        List<Map<String, dynamic>> lines = [];
+
+        for (var item in data) {
+          lines.add({
+            "LineId": int.parse(item["LineId"].toString()),
+            "SuraNo": int.parse(item["SuraNo"].toString()),
+            "AyaNo": int.parse(item["AyaNo"].toString()),
+            "MalTran": item["MalTran"].toString(),
+            "LineWords": (item["LineWords"] as List).map((wordItem) {
+              return {
+                "MalWord": wordItem["MalWord"].toString(),
+                "ArabWord": wordItem["ArabWord"].toString(),
+              };
+            }).toList(),
+          });
+        }
+        print('Successfully processed ${lines.length} lines');
+        return lines;
+      } else if (response.statusCode == 204) {
+        print('No content available for Surah $suraNo, page $pageNo');
+        return [];
+      } else {
+        print('Failed to fetch aya lines: ${response.statusCode}');
+        throw Exception(
+            'Failed to load Aya lines: HTTP ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching aya lines: $e');
+      throw Exception('Failed to load Aya lines: $e');
     }
   }
 
@@ -99,11 +119,11 @@ class QuranService {
     }
   }
 
-Future<List<Map<String, dynamic>>> fetchVerses(int surahNumber, int verseNumber) async {
-    final response = await http.get(
-      Uri.parse("$baseUrl/ayalines/$surahNumber/$verseNumber")
-    );
-    
+  Future<List<Map<String, dynamic>>> fetchVerses(
+      int surahNumber, int verseNumber) async {
+    final response = await http
+        .get(Uri.parse("$baseUrl/ayalines/$surahNumber/$verseNumber"));
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body) as List<dynamic>;
       return data.map((item) {

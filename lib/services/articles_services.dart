@@ -1,21 +1,18 @@
 import 'package:alquran_malayalam/models/article.dart';
-import 'package:alquran_malayalam/services/dbservice.dart';
+import 'package:alquran_malayalam/services/api_service/quran_service.dart';
 
 class ArticlesServices {
-  final dbProvider = DBService.dbProvider;
+  final QuranService _quranService = QuranService();
 
-  Future openDB() async {
-    return await dbProvider.openDB();
-  }
-
-  // get Article of given article id from table.
-  Future getArticle(int articleId) async {
-    final db = await dbProvider.database;
+  Future<Article?> getArticle(int articleId) async {
     try {
-      var article = await db.rawQuery(
-          "SELECT aid, title, matter FROM articles WHERE aid = $articleId");
-      if (article.length == 0) return null;
-      return Article.fromMap(article[0]);
+      final matters = await _quranService.fetchAbout();
+      if (matters.isEmpty) return null;
+
+      return Article(
+        aId: articleId,
+        matter: matters.first,
+      );
     } catch (e) {
       return Future.error(e);
     }

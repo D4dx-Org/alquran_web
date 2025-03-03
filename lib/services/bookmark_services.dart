@@ -1,51 +1,86 @@
 import 'package:alquran_malayalam/models/bookmark.dart';
-import 'package:alquran_malayalam/services/dbservice.dart';
+import 'package:get_storage/get_storage.dart';
 
 class BookmarksServices {
-  final dbProvider = DBService.dbProvider;
+  static const String BOOKMARKS_KEY = 'bookmarks';
+  final _storage = GetStorage();
 
-  Future openDB() async {
-    return await dbProvider.openDB();
+  Future<List<Bookmark>> getAllBookmarks() async {
+    try {
+      final List<dynamic> bookmarksData =
+          _storage.read<List>(BOOKMARKS_KEY) ?? [];
+      return bookmarksData
+          .map((data) => Bookmark(
+                bId: data['id'],
+                suraId: data['SuraId'],
+                ayaNo: data['AyaNo'],
+                suraName: data['SuraName'],
+              ))
+          .toList();
+    } catch (e) {
+      return [];
+    }
   }
 
-  Future getAllBookmarks() async {
-    final db = await dbProvider.database;
-
+  Future<int> createBookmark(Bookmark bmark) async {
     try {
-      await db.execute(
-          "CREATE TABLE IF NOT EXISTS bookmarks (id INTEGER PRIMARY KEY AUTOINCREMENT, SuraId INTEGER, AyaNo INTEGER, SuraName TEXT )");
-      var result = await db.rawQuery(
-          "SELECT id, SuraId, AyaNo, SuraName FROM bookmarks ORDER BY id DESC");
-      return result;
+      final bookmarks = await getAllBookmarks();
+      final newId = bookmarks.isEmpty ? 1 : bookmarks.last.bId + 1;
+
+      final newBookmark = Bookmark(
+        bId: newId,
+        suraId: bmark.suraId,
+        ayaNo: bmark.ayaNo,
+        suraName: bmark.suraName,
+      );
+
+      bookmarks.add(newBookmark);
+
+      await _storage.write(
+          BOOKMARKS_KEY,
+          bookmarks
+              .map((b) => {
+                    'id': b.bId,
+                    'SuraId': b.suraId,
+                    'AyaNo': b.ayaNo,
+                    'SuraName': b.suraName,
+                  })
+              .toList());
+
+      return newId;
     } catch (e) {
       return Future.error(e);
     }
   }
 
-  // Adds new Bookmark records
-  Future<int> createBookmark(Bookmark bmark) async {
-    final db = await dbProvider.database;
-    await db.execute(
-        "CREATE TABLE IF NOT EXISTS bookmarks (id INTEGER PRIMARY KEY AUTOINCREMENT, SuraId INTEGER, AyaNo INTEGER, SuraName TEXT )");
-
-    var result = await db.rawInsert(
-        "INSERT INTO bookmarks (SuraId, AyaNo, SuraName) VALUES ( ${bmark.suraId}, ${bmark.ayaNo}, '${bmark.suraName}')");
-    return result;
-  }
-
-  //Delete Bookmark records
   Future<int> deleteBookmark(int id) async {
-    final db = await dbProvider.database;
-    var result = await db.delete('bookmarks', where: 'id = ?', whereArgs: [id]);
+    try {
+      final bookmarks = await getAllBookmarks();
+      bookmarks.removeWhere((b) => b.bId == id);
 
-    return result;
+      await _storage.write(
+          BOOKMARKS_KEY,
+          bookmarks
+              .map((b) => {
+                    'id': b.bId,
+                    'SuraId': b.suraId,
+                    'AyaNo': b.ayaNo,
+                    'SuraName': b.suraName,
+                  })
+              .toList());
+
+      return 1;
+    } catch (e) {
+      return 0;
+    }
   }
 
   Future<int> deleteAllBookmarks() async {
-    final db = await dbProvider.database;
-    var result = await db.delete(
-      'bookmarks',
-    );
-    return result;
+    try {
+      await _storage.write(BOOKMARKS_KEY, []);
+      return 1;
+    } catch (e) {
+      return 0;
+    }
   }
 }

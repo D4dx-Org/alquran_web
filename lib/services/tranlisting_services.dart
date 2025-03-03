@@ -1,89 +1,77 @@
 import 'package:alquran_malayalam/models/transl.dart';
-import 'package:alquran_malayalam/services/dbservice.dart';
+import 'package:alquran_malayalam/services/api_service/quran_service.dart';
 import 'dart:developer';
 
 class TranListingServices {
-  final dbProvider = DBService.dbProvider;
-
-  Future openDB() async {
-    return await dbProvider.openDB();
-  }
+  final QuranService _quranService = QuranService();
 
   Future<List<TranLine>> getTranLines(
       {required int suraNo,
       int pageNo = 1,
       int perPage = 7,
       int inStartAyaNo = 1}) async {
-    final db = await dbProvider.database;
-    int startAyaNo =
-        inStartAyaNo > 1 ? inStartAyaNo : (pageNo - 1) * perPage + 1;
-    int endAyaNo = (pageNo - 1) * perPage + perPage;
-
-    List<Map<String, dynamic>> result;
-    String searchSql = '';
-    String whereStr = '';
-    if (suraNo > 0) {
-      searchSql = "AND tw.sura_no=$suraNo ";
-      whereStr = "AND tw.aya_no BETWEEN $startAyaNo AND $endAyaNo ";
-    }
     try {
-      log('Executing getTranLines query for suraNo: $suraNo with Aya range: $startAyaNo-$endAyaNo');
-      result = await db.rawQuery("""
-          SELECT tw.line_id, tw.sura_no, tw.aya_no, 
-                 GROUP_CONCAT(tw.arabwords, '|||') as arabwords,
-                 GROUP_CONCAT(tw.malwords, '|||') as malwords,
-                 l.malay_meaning
-          FROM trans_words tw
-          LEFT JOIN line l ON l.line_id = tw.line_id
-          WHERE 1=1 $searchSql $whereStr 
-          GROUP BY tw.line_id
-          ORDER BY tw.sura_no, tw.aya_no, tw.line_id
-      """);
-      log('Query returned "+result.length+" rows in getTranLines');
-      List<TranLine> lines = result.isNotEmpty
-          ? result.map((item) => TranLine.fromMap(item)).toList()
-          : [];
-      if (lines.isNotEmpty) {
-        int i = 0;
-        for (TranLine rLine in lines) {
-          if (i == 0 || (i > 0 && lines[i].ayaNo != lines[i - 1].ayaNo)) {
-            rLine.malTran = '${rLine.ayaNo}. ${rLine.malTran}';
-          }
-          i++;
+      print('Getting translation lines for Surah $suraNo, page $pageNo');
+      final lines = await _quranService.fetchAyaLines(suraNo, pageNo);
+      print('Received ${lines.length} lines from API');
+
+      if (lines.isEmpty) {
+        print('No translation lines available for Surah $suraNo, page $pageNo');
+        return [];
+      }
+
+      List<TranLine> tranLines = [];
+      for (var item in lines) {
+        try {
+          // The QuranService now ensures these are integers
+          final lineId = item['LineId'] as int;
+          final suraNo = item['SuraNo'] as int;
+          final ayaNo = item['AyaNo'] as int;
+          final malTran = item['MalTran'] as String;
+          final lineWords = item['LineWords'] as List;
+
+          tranLines.add(TranLine(
+            lineId: lineId,
+            suraNo: suraNo,
+            ayaNo: ayaNo,
+            malTran: malTran,
+            arabWords:
+                lineWords.map((w) => w['ArabWord'] as String).join('|||'),
+            malWords: lineWords.map((w) => w['MalWord'] as String).join('|||'),
+          ));
+        } catch (e) {
+          print('Error mapping line: $e');
+          print('Problematic item: $item');
+          continue;
         }
       }
-      return lines;
+
+      print('Successfully mapped ${tranLines.length} translation lines');
+      return tranLines;
     } catch (e) {
       log('Error in getTranLines: ${e.toString()}');
+      if (e.toString().contains('204')) {
+        print('No content available, returning empty list');
+        return [];
+      }
       return Future.error(e);
     }
   }
 
-  Future getSearchTranLines({required String queryString}) async {
-    final db = await dbProvider.database;
-
-    List<Map<String, dynamic>> result;
-    String whereStr = '';
-
-    whereStr = "AND malay_meaning LIKE '%$queryString%' ";
+  Future<List<TranLine>> getSearchTranLines(
+      {required String queryString}) async {
     try {
-      log('Executing getSearchTranLines with query: $queryString');
-      result = await db.rawQuery(
-          "SELECT line_id, sura_no, aya_no, malay_meaning, '' AS malwords, '' AS arabwords FROM line  WHERE 1=1 $whereStr ORDER BY sura_no, aya_no, line_id ");
-      log('Query returned "+result.length+" rows in getSearchTranLines');
-      List<TranLine> lines = result.isNotEmpty
-          ? result.map((item) => TranLine.fromMap(item)).toList()
-          : [];
-      if (lines.length > 0) {
-        int i = 0;
-        for (TranLine rLine in lines) {
-          if (i == 0 || (i > 0 && lines[i].ayaNo != lines[i - 1].ayaNo)) {
-            rLine.malTran = rLine.ayaNo.toString() + '. ' + rLine.malTran;
-          }
-          i++;
-        }
-      }
-      return lines;
+      final results = await _quranService.fetchSearchResult(queryString);
+      return results
+          .map((item) => TranLine(
+                lineId: item['LineId'],
+                suraNo: item['SuraNo'],
+                ayaNo: item['AyaNo'],
+                malTran: item['MalTran'],
+                arabWords: '',
+                malWords: '',
+              ))
+          .toList();
     } catch (e) {
       log('Error in getSearchTranLines: ${e.toString()}');
       return Future.error(e);
@@ -91,17 +79,18 @@ class TranListingServices {
   }
 
   Future<String?> getMalayMeaning({required int lineId}) async {
-    final db = await dbProvider.database;
     try {
-      final result = await db.rawQuery(
-          "SELECT malay_meaning FROM line WHERE line_id = ?", [lineId]);
-      if (result.isNotEmpty) {
-        return result.first['malay_meaning'] as String?;
-      } else {
-        return null;
-      }
+      // Since we don't have a direct API endpoint for getting meaning by line ID,
+      // we'll need to get the verse that contains this line and find the matching line
+      final lines = await _quranService.fetchVerses(
+          1, 1); // We'll need to modify this to get the correct verse
+      final line = lines.firstWhere(
+        (l) => l['LineId'] == lineId,
+        orElse: () => throw Exception('Line not found'),
+      );
+      return line['MalTran'];
     } catch (e) {
-      log('Error in getMalayMeaning: "+e.toString()+"');
+      log('Error in getMalayMeaning: ${e.toString()}');
       return Future.error(e);
     }
   }
