@@ -1,6 +1,7 @@
 import 'package:alquran_malayalam/pages/bookmarks/bookmarks_page.dart';
 import 'package:alquran_malayalam/pages/index/components/surah_listing.dart';
 import 'package:alquran_malayalam/pages/index/components/juz_listing.dart';
+import 'package:alquran_malayalam/routes/routes.dart';
 import 'package:alquran_malayalam/widgets/search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,11 +27,16 @@ class IndexPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                "അല്‍ ഖുര്‍ആന്‍",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'NotoSansMalayalam',
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(AppRoutes.MUSHAF);
+                },
+                child: Text(
+                  "അല്‍ ഖുര്‍ആന്‍",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'NotoSansMalayalam',
+                  ),
                 ),
               ),
               Text(
