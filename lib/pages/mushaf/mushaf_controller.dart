@@ -69,8 +69,11 @@ class MushafController extends GetxController {
       isLoading.value = true;
       error.value = '';
 
-      // Load next 3 pages
-      for (int i = 0; i < 3; i++) {
+      // Load 5 pages initially, then 3 pages for subsequent loads
+      int pagesToLoad = versesByPage.isEmpty ? 5 : 3;
+      print('📚 Loading $pagesToLoad pages');
+
+      for (int i = 0; i < pagesToLoad; i++) {
         int pageToLoad = currentPage.value + i;
 
         if (pageToSurahMap != null &&
@@ -94,7 +97,7 @@ class MushafController extends GetxController {
         print('📦 Loaded page $pageToLoad with ${fetchedVerses.length} verses');
       }
 
-      currentPage.value += 3;
+      currentPage.value += pagesToLoad;
     } catch (e) {
       print('❌ Error loading pages: $e');
       error.value = 'Error loading pages: $e';

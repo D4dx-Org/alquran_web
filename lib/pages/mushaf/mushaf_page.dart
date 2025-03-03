@@ -1,4 +1,7 @@
+import 'package:alquran_malayalam/routes/routes.dart';
+import 'package:alquran_malayalam/widgets/ayah_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/pages/mushaf/mushaf_controller.dart';
 import 'package:alquran_malayalam/helpers/arabic_numbers.dart';
@@ -36,6 +39,45 @@ class _MushafPageState extends State<MushafPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Get.back();
+          },
+        ),
+        backgroundColor: Color(0xFF734E09),
+        foregroundColor: Color(0xFFFFFFFF),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "അല്‍ ഖുര്‍ആന്‍",
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: 'NotoSansMalayalam',
+              ),
+            ),
+            Text(
+              "വാക്കര്‍ത്ഥത്തോടുകൂടിയ പരിഭാഷ",
+              style: TextStyle(
+                fontSize: 12,
+                fontFamily: 'NotoSansMalayalam',
+              ),
+            ),
+          ],
+        ),
+        centerTitle: true,
+        elevation: 0,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Get.toNamed(AppRoutes.SETTINGS);
+              },
+              icon: Icon(Icons.settings)),
+        ],
+      ),
       body: SafeArea(
         child: Obx(
           () => controller.error.value.isNotEmpty
@@ -74,33 +116,40 @@ class _MushafPageState extends State<MushafPage> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(16),
-                          child: Directionality(
+                          width: double.infinity,
+                          alignment: Alignment.centerRight,
+                          child: RichText(
                             textDirection: TextDirection.rtl,
-                            child: Wrap(
-                              alignment: WrapAlignment.end,
-                              spacing: 4,
-                              runSpacing: 8,
-                              children: verses.map((verse) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text('Verse: ${verse.verseNumber}'),
-                                        duration: const Duration(seconds: 1),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    '${verse.arabicText} \u06DD${ArabicNumbers.toArabicNumerals(int.parse(verse.verseNumber.split(':').last))} ',
+                            textAlign: TextAlign.right,
+                            text: TextSpan(
+                              children: verses.map(
+                                (verse) {
+                                  return TextSpan(
+                                    text:
+                                        '${verse.arabicText} \u06DD${ArabicNumbers.toArabicNumerals(int.parse(verse.verseNumber.split(':').last))} ',
                                     style: const TextStyle(
                                       fontSize: 24,
                                       height: 2,
                                       fontFamily: 'AmiriQuran',
+                                      color: Colors.black,
                                     ),
-                                  ),
-                                );
-                              }).toList(),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Verse ${verse.verseNumber} - Page $pageNumber',
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 1),
+                                          ),
+                                        );
+                                      },
+                                  );
+                                },
+                              ).toList(),
                             ),
                           ),
                         ),
