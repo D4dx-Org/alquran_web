@@ -19,7 +19,7 @@ import 'package:alquran_malayalam/pages/tranlisting/tranlisting_binding.dart';
 import 'package:alquran_malayalam/pages/tranlisting/tranlisting_page.dart';
 
 abstract class AppRoutes {
-  static const HOME = '/';
+  static const HOME = '/home';
   static const SPLASH = '/splash';
   static const TRANLISTING = "/tranlisting/:surano/:ayano";
   static const ARTICLE = "/article/:aid";
