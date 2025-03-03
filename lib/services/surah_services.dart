@@ -18,9 +18,9 @@ class SurahServices {
           "AND (`ASuraName` LIKE '%$searchKey%' OR `MSuraName` LIKE '%$searchKey%')";
     }
     try {
-      var result = await db?.rawQuery(
+      var result = await db.rawQuery(
           "SELECT * FROM suratable WHERE 1 = 1 $searchSql ORDER BY `Sura_id` ASC");
-      return result ?? [];
+      return result;
     } catch (e) {
       return Future.error(e);
     }

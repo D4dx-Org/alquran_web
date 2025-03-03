@@ -16,7 +16,7 @@ class BookmarksServices {
           "CREATE TABLE IF NOT EXISTS bookmarks (id INTEGER PRIMARY KEY AUTOINCREMENT, SuraId INTEGER, AyaNo INTEGER, SuraName TEXT )");
       var result = await db.rawQuery(
           "SELECT id, SuraId, AyaNo, SuraName FROM bookmarks ORDER BY id DESC");
-      return result ?? [];
+      return result;
     } catch (e) {
       return Future.error(e);
     }
