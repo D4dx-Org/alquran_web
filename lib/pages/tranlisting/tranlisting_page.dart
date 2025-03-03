@@ -20,9 +20,27 @@ class TranListingPage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Color(0xFF734E09),
           foregroundColor: Color(0xFFFFFFFF),
-          title: Text(
-            "Al Quran Malayalam",
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "അല്‍ ഖുര്‍ആന്‍",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'NotoSansMalayalam',
+                ),
+              ),
+              Text(
+                "വാക്കര്‍ത്ഥത്തോടുകൂടിയ പരിഭാഷ",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'NotoSansMalayalam',
+                ),
+              ),
+            ],
           ),
+          centerTitle: true,
           elevation: 0,
           actions: [
             IconButton(
