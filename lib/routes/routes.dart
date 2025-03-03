@@ -1,5 +1,6 @@
 import 'package:alquran_malayalam/pages/articles/articles_binding.dart';
 import 'package:alquran_malayalam/pages/articles/articles_page.dart';
+import 'package:alquran_malayalam/pages/bookmarks/bookmarks_binding.dart';
 import 'package:alquran_malayalam/pages/bookmarks/bookmarks_page.dart';
 import 'package:alquran_malayalam/pages/info.dart';
 import 'package:alquran_malayalam/pages/searchres/searchres_binding.dart';
@@ -55,6 +56,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.BOOKMARKS,
       page: () => BookmarksPage(),
+      binding: BookmarksBinding(),
     ),
     GetPage(
       name: AppRoutes.SETTINGS,
