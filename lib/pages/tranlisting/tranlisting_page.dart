@@ -210,7 +210,6 @@ class TranLineView extends StatelessWidget {
   final TranLine tranLine;
   final index;
   final TranListingController controller = Get.find();
-  RxBool isSelected = false.obs;
   TranLineView({required this.tranLine, required this.index});
 
   @override
@@ -233,7 +232,6 @@ class TranLineView extends StatelessWidget {
             ),
           ],
         ),
-        onTap: (() => isSelected.value = !isSelected.value),
       ),
     );
   }
@@ -277,8 +275,13 @@ class TranLineView extends StatelessWidget {
           ),
         ),
 
-        // Show action buttons if selected
-        Obx(() => isSelected.value ? RowButtonsRow(tranLine) : Container()),
+        // Show action buttons
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            RowButtonsRow(inTranLine),
+          ],
+        ),
         SizedBox(height: 8),
       ],
     );

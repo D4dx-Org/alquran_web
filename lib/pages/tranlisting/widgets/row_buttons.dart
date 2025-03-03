@@ -36,17 +36,11 @@ class RowButtonsRow extends StatelessWidget {
                     alignment: Alignment.center,
                     width: 30,
                     height: 30,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(13.5),
-                      ),
-                      color: Color(0xFF734E09),
-                    ),
                     child: Text(
-                      curTranLine.ayaNo.toString(),
+                      '${curTranLine.suraNo}:${curTranLine.ayaNo}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 1),
+                        color: Color(0xFF734E09),
                         fontFamily: 'NotoSansMalayalam',
                         fontSize: 15,
                       ),
