@@ -3,6 +3,8 @@ import 'package:alquran_malayalam/pages/articles/articles_page.dart';
 import 'package:alquran_malayalam/pages/bookmarks/bookmarks_binding.dart';
 import 'package:alquran_malayalam/pages/bookmarks/bookmarks_page.dart';
 import 'package:alquran_malayalam/pages/info.dart';
+import 'package:alquran_malayalam/pages/mushaf/mushaf_bindings.dart';
+import 'package:alquran_malayalam/pages/mushaf/mushaf_page.dart';
 import 'package:alquran_malayalam/pages/searchres/searchres_binding.dart';
 import 'package:alquran_malayalam/pages/searchres/searchres_page.dart';
 import 'package:alquran_malayalam/pages/settings/settings_binding.dart';
@@ -25,6 +27,7 @@ abstract class AppRoutes {
   static const BOOKMARKS = "/bookmarks";
   static const SETTINGS = "/settings";
   static const SEARCHRES = "/search/:schtxt";
+  static const MUSHAF = "/mushaf";
 }
 
 class AppPages {
@@ -68,5 +71,10 @@ class AppPages {
       page: () => SearchResPage(),
       binding: SearchResBinding(),
     ),
+    GetPage(
+      name: AppRoutes.MUSHAF,
+      page: () => MushafPage(),
+      binding: MushafBindings(),
+    )
   ];
 }
