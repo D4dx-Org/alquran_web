@@ -30,8 +30,8 @@ class TranListingServices {
       log('Executing getTranLines query for suraNo: $suraNo with Aya range: $startAyaNo-$endAyaNo');
       result = await db.rawQuery("""
           SELECT tw.line_id, tw.sura_no, tw.aya_no, 
-                 GROUP_CONCAT(tw.arabwords) as arabwords,
-                 GROUP_CONCAT(tw.malwords) as malwords,
+                 GROUP_CONCAT(tw.arabwords, '|||') as arabwords,
+                 GROUP_CONCAT(tw.malwords, '|||') as malwords,
                  l.malay_meaning
           FROM trans_words tw
           LEFT JOIN line l ON l.line_id = tw.line_id

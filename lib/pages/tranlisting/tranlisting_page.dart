@@ -1,5 +1,6 @@
 import 'package:alquran_malayalam/models/transl.dart';
 import 'package:alquran_malayalam/pages/tranlisting/widgets/row_buttons.dart';
+import 'package:alquran_malayalam/routes/routes.dart';
 import 'package:alquran_malayalam/widgets/ayah_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,6 +25,11 @@ class TranListingPage extends StatelessWidget {
           ),
           elevation: 0,
           actions: [
+            IconButton(
+                onPressed: () {
+                  Get.toNamed(AppRoutes.SETTINGS);
+                },
+                icon: Icon(Icons.settings)),
             IconButton(
                 icon: const Icon(Icons.low_priority),
                 color: Color(0xFFFFFFFF),
@@ -233,8 +239,8 @@ class TranLineView extends StatelessWidget {
   }
 
   _viewTranLineWidget(TranLine inTranLine, int index) {
-    List<String> arabWords = inTranLine.arabWords.split(",");
-    List<String> malWords = inTranLine.malWords.split(",");
+    List<String> arabWords = inTranLine.arabWords.split("|||");
+    List<String> malWords = inTranLine.malWords.split("|||");
 
     return Column(
       children: <Widget>[
