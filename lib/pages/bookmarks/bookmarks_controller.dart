@@ -7,7 +7,7 @@ import 'package:alquran_malayalam/widgets/delete_dialog.dart';
 class BookmarksController extends GetxController {
   BookmarksServices bookmarksServices = BookmarksServices();
   RxList<Bookmark> bookmarks = <Bookmark>[].obs;
-  bool isLoading = true;
+  RxBool isLoading = true.obs;
 
   @override
   void onInit() {
@@ -24,30 +24,20 @@ class BookmarksController extends GetxController {
   loadBookmarks(int bkTypeNo) async {
     try {
       print('BookmarksController: Starting to load bookmarks');
-      isLoading = true;
-      update();
+      isLoading.value = true;
       bookmarks.value = [];
-      List list = await bookmarksServices.getAllBookmarks();
+      List<Bookmark> list = await bookmarksServices.getAllBookmarks();
       print(
           'BookmarksController: Retrieved ${list.length} bookmarks from storage');
 
-      for (var element in list) {
-        bookmarks.add(Bookmark(
-          bId: element['id'],
-          suraId: element['SuraId'],
-          ayaNo: element['AyaNo'],
-          suraName: element['SuraName'],
-        ));
-      }
+      bookmarks.value = list;
       print(
           'BookmarksController: Successfully loaded ${bookmarks.length} bookmarks');
 
-      isLoading = false;
-      update();
+      isLoading.value = false;
     } catch (e) {
       print('BookmarksController: Error loading bookmarks: $e');
-      isLoading = false;
-      update();
+      isLoading.value = false;
     }
   }
 

@@ -17,12 +17,12 @@ class BookmarksServices {
       }
 
       final bookmarks = bookmarksData
-          .map((data) => Bookmark(
-                bId: data['id'] as int,
-                suraId: data['SuraId'] as int,
-                ayaNo: data['AyaNo'] as int,
-                suraName: data['SuraName'] as String,
-              ))
+          .map((data) => Bookmark.fromMap({
+                'id': data['id'],
+                'SuraId': data['SuraId'],
+                'AyaNo': data['AyaNo'],
+                'SuraName': data['SuraName'],
+              }))
           .toList();
 
       print(

@@ -26,33 +26,31 @@ class BookmarksPage extends StatelessWidget {
         //   ],
         //   elevation: 0,
         // ),
-        body: GetBuilder<BookmarksController>(
-            init: controller,
-            builder: (_) => controller.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : SafeArea(
-                    child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        body: Obx(() => controller.isLoading.value
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SafeArea(
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                controller.removeAllBookmarks();
-                              }),
-                        ],
-                      ),
-                      Expanded(
-                          child: BookmarksListing(
-                        bookmarks: controller.bookmarks.value,
-                      )),
+                      IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            controller.removeAllBookmarks();
+                          }),
                     ],
-                  ))));
+                  ),
+                  Expanded(
+                      child: BookmarksListing(
+                    bookmarks: controller.bookmarks,
+                  )),
+                ],
+              ))));
   }
 }
 
