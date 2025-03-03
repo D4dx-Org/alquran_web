@@ -14,18 +14,22 @@ class BookmarksController extends GetxController {
     print('BookmarksController: onInit called');
     super.onInit();
     loadDB();
+    // Listen to changes in bookmarks list
+    ever(bookmarks, (_) {
+      print(
+          'BookmarksController: Bookmarks list updated, length: ${bookmarks.length}');
+    });
   }
 
   loadDB() async {
     print('BookmarksController: loadDB called');
-    loadBookmarks(1);
+    await loadBookmarks(1);
   }
 
-  loadBookmarks(int bkTypeNo) async {
+  Future<void> loadBookmarks(int bkTypeNo) async {
     try {
       print('BookmarksController: Starting to load bookmarks');
       isLoading.value = true;
-      bookmarks.value = [];
       List<Bookmark> list = await bookmarksServices.getAllBookmarks();
       print(
           'BookmarksController: Retrieved ${list.length} bookmarks from storage');
@@ -33,32 +37,40 @@ class BookmarksController extends GetxController {
       bookmarks.value = list;
       print(
           'BookmarksController: Successfully loaded ${bookmarks.length} bookmarks');
-
-      isLoading.value = false;
     } catch (e) {
       print('BookmarksController: Error loading bookmarks: $e');
+    } finally {
       isLoading.value = false;
+      update();
     }
   }
 
-  removeBookmark(int bid) {
-    bookmarks.removeWhere((bookmark) => bookmark.bId == bid);
-    bookmarksServices.deleteBookmark(bid);
-    update();
+  Future<void> removeBookmark(int bid) async {
+    try {
+      await bookmarksServices.deleteBookmark(bid);
+      bookmarks.removeWhere((bookmark) => bookmark.bId == bid);
+      update();
+    } catch (e) {
+      print('BookmarksController: Error removing bookmark: $e');
+    }
   }
 
-  removeAllBookmarks() {
+  Future<void> removeAllBookmarks() async {
     if (bookmarks.isEmpty) return;
+
     DeleteDialog deleteDialog = DeleteDialog(
         deleteMessage: "Are you sure want to delete all Bookmarks?",
         onDeletePressed: () async {
-          Get.back();
-          bookmarks.removeRange(0, bookmarks.length);
-          bookmarksServices.deleteAllBookmarks();
-          Get.snackbar('Bookmarks Deleted!', 'No more Bookmarks !!',
-              snackPosition: SnackPosition.BOTTOM);
-
-          update();
+          try {
+            Get.back();
+            await bookmarksServices.deleteAllBookmarks();
+            bookmarks.clear();
+            Get.snackbar('Bookmarks Deleted!', 'No more Bookmarks !!',
+                snackPosition: SnackPosition.BOTTOM);
+            update();
+          } catch (e) {
+            print('BookmarksController: Error removing all bookmarks: $e');
+          }
         });
     deleteDialog.showDeleteDialog();
   }

@@ -11,6 +11,7 @@ import 'package:alquran_malayalam/models/surah.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/pages/index/index_controller.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:alquran_malayalam/pages/bookmarks/bookmarks_controller.dart';
 
 class TranListingController extends GetxController {
   QuranService quranService = QuranService();
@@ -42,6 +43,10 @@ class TranListingController extends GetxController {
   int maxScrolledPageNo = 1;
   int initialAyahDiff = 0;
   List<TranLine> balSubLineList = [];
+
+  // Add RxMap to track bookmark states
+  final RxMap<String, bool> bookmarkStates = <String, bool>{}.obs;
+  final BookmarksServices _bookmarksServices = BookmarksServices();
 
   @override
   void onInit() {
@@ -146,6 +151,9 @@ class TranListingController extends GetxController {
       }
       tranLineList.addAll(list);
 
+      // Load bookmark states for the new lines
+      await loadBookmarkStates();
+
       isLoading = false;
       if (indexToScroll > 0) {
         _scrollToIndex(indexToScroll);
@@ -221,23 +229,60 @@ class TranListingController extends GetxController {
     }
   }
 
-  bookmarkAyahLine(TranLine tranLine) {
-    String suraName =
-        ' ${tranLine.suraNo}:${tranLine.ayaNo}  ${getSuraName(tranLine.suraNo)}';
-    String linePart = tranLine.malTran.substring(
-        0, (tranLine.malTran.length < 50) ? tranLine.malTran.length : 50);
+  Future<void> toggleBookmark(TranLine tranLine) async {
+    final String key = '${tranLine.suraNo}:${tranLine.ayaNo}';
+    final bool isCurrentlyBookmarked =
+        await _bookmarksServices.isBookmarked(tranLine.suraNo, tranLine.ayaNo);
 
-    Bookmark tranbk = Bookmark(
-      bId: -1,
-      suraId: tranLine.suraNo,
-      suraName: "$suraName#$linePart", // sura # linepart
-      ayaNo: tranLine.ayaNo,
-    );
-    BookmarksServices bookmarksServices = BookmarksServices();
-    bookmarksServices.createBookmark(tranbk);
-    Get.snackbar('Verse Bookmarked', 'Bookmark added in Bookmarks page!',
-        snackPosition: SnackPosition.BOTTOM);
-    log("Bookmark added: $tranbk");
+    try {
+      if (isCurrentlyBookmarked) {
+        // Find the bookmark ID to remove
+        final bookmarks = await _bookmarksServices.getAllBookmarks();
+        final bookmark = bookmarks.firstWhere(
+          (b) => b.suraId == tranLine.suraNo && b.ayaNo == tranLine.ayaNo,
+        );
+        await _bookmarksServices.deleteBookmark(bookmark.bId);
+        bookmarkStates[key] = false;
+        Get.snackbar('Bookmark Removed', 'Verse removed from bookmarks',
+            snackPosition: SnackPosition.BOTTOM);
+      } else {
+        String suraName =
+            '${tranLine.suraNo}:${tranLine.ayaNo}  ${getSuraName(tranLine.suraNo)}';
+        String linePart = tranLine.malTran.substring(
+            0, (tranLine.malTran.length < 50) ? tranLine.malTran.length : 50);
+
+        Bookmark tranbk = Bookmark(
+          bId: -1,
+          suraId: tranLine.suraNo,
+          suraName: "$suraName#$linePart",
+          ayaNo: tranLine.ayaNo,
+        );
+        await _bookmarksServices.createBookmark(tranbk);
+        bookmarkStates[key] = true;
+        Get.snackbar('Verse Bookmarked', 'Bookmark added in Bookmarks page!',
+            snackPosition: SnackPosition.BOTTOM);
+      }
+
+      // Update BookmarksController if it exists
+      if (Get.isRegistered<BookmarksController>()) {
+        final bookmarksController = Get.find<BookmarksController>();
+        await bookmarksController.loadBookmarks(1);
+      }
+      update();
+    } catch (e) {
+      print('Error toggling bookmark: $e');
+      Get.snackbar('Error', 'Failed to toggle bookmark',
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  Future<void> loadBookmarkStates() async {
+    for (var line in tranLineList) {
+      final String key = '${line.suraNo}:${line.ayaNo}';
+      bookmarkStates[key] =
+          await _bookmarksServices.isBookmarked(line.suraNo, line.ayaNo);
+    }
+    update();
   }
 
   Future _scrollToIndex(int cIndex) async {

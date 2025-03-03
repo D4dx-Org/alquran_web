@@ -1,20 +1,25 @@
+import 'dart:convert';
 import 'package:alquran_malayalam/models/bookmark.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BookmarksServices {
   static const String BOOKMARKS_KEY = 'bookmarks';
-  final _storage = GetStorage();
 
   Future<List<Bookmark>> getAllBookmarks() async {
     try {
-      print('BookmarksServices: Attempting to read bookmarks from storage');
-      final List<dynamic>? bookmarksData = _storage.read<List>(BOOKMARKS_KEY);
-      print('BookmarksServices: Raw data from storage: $bookmarksData');
+      print(
+          'BookmarksServices: Attempting to read bookmarks from SharedPreferences');
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? bookmarksDataString = prefs.getString(BOOKMARKS_KEY);
+      print(
+          'BookmarksServices: Raw data from SharedPreferences: $bookmarksDataString');
 
-      if (bookmarksData == null) {
-        print('BookmarksServices: No bookmarks found in storage');
+      if (bookmarksDataString == null) {
+        print('BookmarksServices: No bookmarks found in SharedPreferences');
         return [];
       }
+
+      final List<dynamic> bookmarksData = jsonDecode(bookmarksDataString);
 
       final bookmarks = bookmarksData
           .map((data) => Bookmark.fromMap({
@@ -48,16 +53,7 @@ class BookmarksServices {
 
       bookmarks.add(newBookmark);
 
-      await _storage.write(
-          BOOKMARKS_KEY,
-          bookmarks
-              .map((b) => {
-                    'id': b.bId,
-                    'SuraId': b.suraId,
-                    'AyaNo': b.ayaNo,
-                    'SuraName': b.suraName,
-                  })
-              .toList());
+      await _saveBookmarks(bookmarks);
 
       return newId;
     } catch (e) {
@@ -70,16 +66,7 @@ class BookmarksServices {
       final bookmarks = await getAllBookmarks();
       bookmarks.removeWhere((b) => b.bId == id);
 
-      await _storage.write(
-          BOOKMARKS_KEY,
-          bookmarks
-              .map((b) => {
-                    'id': b.bId,
-                    'SuraId': b.suraId,
-                    'AyaNo': b.ayaNo,
-                    'SuraName': b.suraName,
-                  })
-              .toList());
+      await _saveBookmarks(bookmarks);
 
       return 1;
     } catch (e) {
@@ -89,10 +76,34 @@ class BookmarksServices {
 
   Future<int> deleteAllBookmarks() async {
     try {
-      await _storage.write(BOOKMARKS_KEY, []);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString(BOOKMARKS_KEY, jsonEncode([]));
       return 1;
     } catch (e) {
       return 0;
     }
+  }
+
+  Future<bool> isBookmarked(int suraId, int ayaNo) async {
+    try {
+      final bookmarks = await getAllBookmarks();
+      return bookmarks.any((b) => b.suraId == suraId && b.ayaNo == ayaNo);
+    } catch (e) {
+      print('BookmarksServices: Error checking bookmark status: $e');
+      return false;
+    }
+  }
+
+  Future<void> _saveBookmarks(List<Bookmark> bookmarks) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<Map<String, dynamic>> bookmarksMap = bookmarks
+        .map((b) => {
+              'id': b.bId,
+              'SuraId': b.suraId,
+              'AyaNo': b.ayaNo,
+              'SuraName': b.suraName,
+            })
+        .toList();
+    await prefs.setString(BOOKMARKS_KEY, jsonEncode(bookmarksMap));
   }
 }

@@ -82,12 +82,19 @@ class RowButtonsRow extends StatelessWidget {
   Widget bookmarkBtn(TranLine curTranLine) {
     return Transform.scale(
         scale: 0.90,
-        child: IconButton(
-          onPressed: () async {
-            controller.bookmarkAyahLine(curTranLine);
-          },
-          icon: const Icon(Icons.bookmark_outline,
-              color: Color(0xFF734E09), size: 28),
-        ));
+        child: Obx(() {
+          final String key = '${curTranLine.suraNo}:${curTranLine.ayaNo}';
+          final bool isBookmarked = controller.bookmarkStates[key] ?? false;
+          return IconButton(
+            onPressed: () async {
+              controller.toggleBookmark(curTranLine);
+            },
+            icon: Icon(
+              isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
+              color: Color(0xFF734E09),
+              size: 28,
+            ),
+          );
+        }));
   }
 }
