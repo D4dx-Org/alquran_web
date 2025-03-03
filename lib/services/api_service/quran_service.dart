@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
 
 class QuranService {
   final String baseUrl = "https://alquranmalayalam.net/alquran-api";
@@ -11,7 +10,6 @@ class QuranService {
   var AyaNumber = 1;
   var pageNumber = 0;
   String searchword = '';
-  final Dio _dio = Dio();
 
   Future<List<Map<String, dynamic>>> fetchSurahs() async {
     final response = await http.get(Uri.parse("$baseUrl/suranames"));
@@ -92,30 +90,47 @@ class QuranService {
 
   Future<List<Map<String, dynamic>>> fetchSearchResult(
       String searchword) async {
-    final response =
-        await http.get(Uri.parse("$baseUrl/searchword/0/$searchword"));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body) as List;
+    try {
+      print('Searching for: $searchword');
+      final response =
+          await http.get(Uri.parse("$baseUrl/searchword/0/$searchword"));
+      print('Search response status: ${response.statusCode}');
 
-      // Fetch all surahs to get the MSuraName
-      List<Map<String, dynamic>> surahs = await fetchSurahs();
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as List;
+        print('Found ${data.length} search results');
 
-      return data.map((item) {
-        // Find the corresponding surah
-        var surah = surahs.firstWhere((s) => s['SuraId'] == item['SuraNo'],
-            orElse: () => {'MSuraName': 'Unknown'});
+        // Fetch all surahs to get the MSuraName
+        List<Map<String, dynamic>> surahs = await fetchSurahs();
 
-        return {
-          "LineId": item["LineId"],
-          "SuraNo": item["SuraNo"],
-          "MSuraName": surah['MSuraName'],
-          "AyaNo": item["AyaNo"],
-          "MalTran": item["MalTran"],
-          "LineWords": item["LineWords"],
-        };
-      }).toList();
-    } else {
-      throw Exception('Failed to load Search Results');
+        return data.map((item) {
+          // Find the corresponding surah
+          Map<String, dynamic> surah = {'MSuraName': 'Unknown'};
+          try {
+            surah = surahs.firstWhere(
+              (s) => s['SuraId'] == item['SuraNo'].toString(),
+            );
+          } catch (e) {
+            print('Warning: Surah not found for SuraNo: ${item['SuraNo']}');
+          }
+
+          return {
+            "LineId": item["LineId"].toString(),
+            "SuraNo": item["SuraNo"].toString(),
+            "MSuraName": surah['MSuraName'],
+            "AyaNo": item["AyaNo"].toString(),
+            "MalTran": item["MalTran"].toString(),
+            "LineWords": item["LineWords"] ?? [],
+          };
+        }).toList();
+      } else {
+        print('Search failed with status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load Search Results: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error in fetchSearchResult: $e');
+      throw Exception('Failed to load Search Results: $e');
     }
   }
 

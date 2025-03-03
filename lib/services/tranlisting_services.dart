@@ -64,12 +64,20 @@ class TranListingServices {
       final results = await _quranService.fetchSearchResult(queryString);
       return results
           .map((item) => TranLine(
-                lineId: item['LineId'],
-                suraNo: item['SuraNo'],
-                ayaNo: item['AyaNo'],
-                malTran: item['MalTran'],
-                arabWords: '',
-                malWords: '',
+                lineId: int.parse(item['LineId'].toString()),
+                suraNo: int.parse(item['SuraNo'].toString()),
+                ayaNo: int.parse(item['AyaNo'].toString()),
+                malTran: item['MalTran'].toString(),
+                arabWords: item['LineWords'] != null
+                    ? (item['LineWords'] as List)
+                        .map((w) => w['ArabWord'].toString())
+                        .join('|||')
+                    : '',
+                malWords: item['LineWords'] != null
+                    ? (item['LineWords'] as List)
+                        .map((w) => w['MalWord'].toString())
+                        .join('|||')
+                    : '',
               ))
           .toList();
     } catch (e) {

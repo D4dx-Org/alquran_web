@@ -7,17 +7,29 @@ class BookmarksServices {
 
   Future<List<Bookmark>> getAllBookmarks() async {
     try {
-      final List<dynamic> bookmarksData =
-          _storage.read<List>(BOOKMARKS_KEY) ?? [];
-      return bookmarksData
+      print('BookmarksServices: Attempting to read bookmarks from storage');
+      final List<dynamic>? bookmarksData = _storage.read<List>(BOOKMARKS_KEY);
+      print('BookmarksServices: Raw data from storage: $bookmarksData');
+
+      if (bookmarksData == null) {
+        print('BookmarksServices: No bookmarks found in storage');
+        return [];
+      }
+
+      final bookmarks = bookmarksData
           .map((data) => Bookmark(
-                bId: data['id'],
-                suraId: data['SuraId'],
-                ayaNo: data['AyaNo'],
-                suraName: data['SuraName'],
+                bId: data['id'] as int,
+                suraId: data['SuraId'] as int,
+                ayaNo: data['AyaNo'] as int,
+                suraName: data['SuraName'] as String,
               ))
           .toList();
+
+      print(
+          'BookmarksServices: Successfully loaded ${bookmarks.length} bookmarks');
+      return bookmarks;
     } catch (e) {
+      print('BookmarksServices: Error reading bookmarks: $e');
       return [];
     }
   }

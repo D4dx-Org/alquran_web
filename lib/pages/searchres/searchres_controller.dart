@@ -18,6 +18,8 @@ class SearchResController extends GetxController {
   bool isTransLoading = true;
   bool isIntptrLoading = true;
   bool isQuranLoading = true;
+  RxBool hasError = false.obs;
+  RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -25,34 +27,51 @@ class SearchResController extends GetxController {
     loadDB();
 
     queryStr.listen((querystr) async {
-      await loadTranSearchRes(queryStr.value);
+      if (querystr.isNotEmpty) {
+        await loadTranSearchRes(querystr);
+      }
     });
   }
 
   loadDB() async {
     var data = Get.arguments;
-    queryStr.value = data[0];
-
-    if (queryStr.value == '') return;
-
-    loadTranSearchRes(queryStr.value);
+    if (data != null && data.isNotEmpty) {
+      queryStr.value = data[0];
+      if (queryStr.value.isNotEmpty) {
+        await loadTranSearchRes(queryStr.value);
+      }
+    }
   }
 
   loadTranSearchRes(String schStr) async {
     try {
+      print('SearchResController: Starting search for "$schStr"');
       isLoading = true;
+      hasError.value = false;
+      errorMessage.value = '';
       tranLineList = [];
       update();
 
-      List list = await searchServices.getSearchTranLines(queryString: schStr);
-      for (var element in list) {
-        tranLineList.add(element);
-      }
+      List<TranLine> results =
+          await searchServices.getSearchTranLines(queryString: schStr);
+      print('SearchResController: Found ${results.length} results');
 
+      tranLineList = results;
       isLoading = false;
       update();
     } catch (e) {
-      //   print(e);
+      print('SearchResController: Error during search: $e');
+      hasError.value = true;
+      errorMessage.value = 'Search failed. Please try again.';
+      isLoading = false;
+      update();
+
+      Get.snackbar(
+        'Search Error',
+        'Failed to perform search. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 

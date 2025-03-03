@@ -11,29 +11,43 @@ class BookmarksController extends GetxController {
 
   @override
   void onInit() {
+    print('BookmarksController: onInit called');
     super.onInit();
     loadDB();
   }
 
   loadDB() async {
-    //   await surahServices.openDB();
+    print('BookmarksController: loadDB called');
     loadBookmarks(1);
   }
 
   loadBookmarks(int bkTypeNo) async {
     try {
+      print('BookmarksController: Starting to load bookmarks');
       isLoading = true;
       update();
       bookmarks.value = [];
       List list = await bookmarksServices.getAllBookmarks();
+      print(
+          'BookmarksController: Retrieved ${list.length} bookmarks from storage');
+
       for (var element in list) {
-        bookmarks.add(Bookmark.fromMap(element));
+        bookmarks.add(Bookmark(
+          bId: element['id'],
+          suraId: element['SuraId'],
+          ayaNo: element['AyaNo'],
+          suraName: element['SuraName'],
+        ));
       }
+      print(
+          'BookmarksController: Successfully loaded ${bookmarks.length} bookmarks');
 
       isLoading = false;
       update();
     } catch (e) {
-      // print(e);
+      print('BookmarksController: Error loading bookmarks: $e');
+      isLoading = false;
+      update();
     }
   }
 
