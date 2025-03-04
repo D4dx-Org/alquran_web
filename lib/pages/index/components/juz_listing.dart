@@ -4,6 +4,7 @@ import 'package:alquran_malayalam/pages/index/index_controller.dart';
 import 'package:alquran_malayalam/widgets/ayah_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class JuzListing extends StatelessWidget {
   final List<Juz> juzList;
@@ -11,19 +12,38 @@ class JuzListing extends StatelessWidget {
 
   JuzListing({super.key, required this.juzList});
 
+  int _getColumnCount(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth >= 1024) {
+      // Laptop screen
+      return 3;
+    } else if (screenWidth >= 768) {
+      // Tablet screen
+      return 2;
+    } else {
+      // Mobile screen
+      return 1;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (juzList.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return ListView.builder(
+    return Padding(
       padding: const EdgeInsets.all(16.0),
-      itemCount: juzList.length,
-      itemBuilder: (context, index) {
-        final juz = juzList[index];
-        return _buildJuzCard(context, juz);
-      },
+      child: MasonryGridView.count(
+        crossAxisCount: _getColumnCount(context),
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        itemCount: juzList.length,
+        itemBuilder: (context, index) {
+          final juz = juzList[index];
+          return _buildJuzCard(context, juz);
+        },
+      ),
     );
   }
 

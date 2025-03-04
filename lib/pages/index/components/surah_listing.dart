@@ -3,6 +3,7 @@ import 'package:alquran_malayalam/pages/index/index_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/widgets/ayah_picker.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class SurahListing extends StatelessWidget {
   final List<Surah> surahs;
@@ -104,12 +105,28 @@ class SurahListing extends StatelessWidget {
     );
   }
 
+  int _getColumnCount(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth >= 1024) {
+      // Laptop screen
+      return 3;
+    } else if (screenWidth >= 768) {
+      // Tablet screen
+      return 2;
+    } else {
+      // Mobile screen
+      return 1;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
+    return MasonryGridView.count(
       padding: const EdgeInsets.all(5.0),
+      crossAxisCount: _getColumnCount(context),
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
       itemCount: surahs.length,
-      separatorBuilder: (context, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
         return _buildSurahItemView(surah: surahs[index], index: index);
       },
