@@ -11,7 +11,7 @@ import 'package:alquran_malayalam/widgets/drawer.dart';
 
 class IndexPage extends StatelessWidget {
   List<Surah> surahs = [];
-  final IndexController controller = Get.put(IndexController());
+  final IndexController controller = Get.find<IndexController>();
   IndexPage({Key? key}) : super(key: key);
 
   @override
@@ -81,7 +81,6 @@ class IndexPage extends StatelessWidget {
                     children: [
                       // Surah Tab
                       GetBuilder<IndexController>(
-                        init: controller,
                         builder: (_) => controller.isLoading
                             ? const Center(
                                 child: CircularProgressIndicator(),
@@ -106,7 +105,6 @@ class IndexPage extends StatelessWidget {
                       ),
                       // Juz Tab
                       GetBuilder<IndexController>(
-                        init: controller,
                         builder: (_) => controller.isLoading
                             ? const Center(
                                 child: CircularProgressIndicator(),
@@ -117,7 +115,6 @@ class IndexPage extends StatelessWidget {
                       ),
                       // Bookmarks Tab
                       GetBuilder<IndexController>(
-                        init: controller,
                         builder: (_) => controller.isLoading
                             ? const Center(
                                 child: CircularProgressIndicator(),
