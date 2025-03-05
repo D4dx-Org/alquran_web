@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:alquran_malayalam/pages/index/index_controller.dart';
 import 'package:alquran_malayalam/models/surah.dart';
 import 'package:alquran_malayalam/widgets/drawer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class IndexPage extends StatelessWidget {
   List<Surah> surahs = [];
@@ -51,6 +52,40 @@ class IndexPage extends StatelessWidget {
           centerTitle: true,
           elevation: 0,
           actions: [
+            TextButton.icon(
+              icon: const Icon(
+                Icons.history,
+                color: Colors.white,
+              ),
+              label: const Text(
+                'Old Site',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+              style: TextButton.styleFrom(
+                side: const BorderSide(color: Colors.white, width: 1),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onPressed: () async {
+                final Uri url = Uri.parse('https://old.alquranmalayalam.net');
+                try {
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                } catch (e) {
+                  print('Error launching URL: $e');
+                }
+              },
+            ),
+            SizedBox(width: 20),
             Obx(() => IconButton(
                   icon: (!controller.isSearching.value)
                       ? const Icon(
