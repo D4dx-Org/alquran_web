@@ -1,11 +1,11 @@
 {
-    "name": "alquran_malayalam_app",
-    "short_name": "alquran_malayalam_app",
+    "name": "Al Quran Malayalam",
+    "short_name": "Al Quran Malayalam",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",
     "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "description": "Al Quran Malayalam provides Quran translation and teachings in Malayalam.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

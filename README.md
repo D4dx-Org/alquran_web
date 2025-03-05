@@ -1,6 +1,6 @@
 # alquran_malayalam
 
-A new Flutter project.
+Al Quran Malayalam provides Quran translation and teachings in Malayalam.
 
 ## Getting Started
 
