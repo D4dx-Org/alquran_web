@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:alquran_malayalam/models/bookmark.dart';
 import 'package:alquran_malayalam/models/transl.dart';
