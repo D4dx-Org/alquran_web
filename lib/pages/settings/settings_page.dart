@@ -37,73 +37,64 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        verticalDirection: VerticalDirection.down,
-        children: <Widget>[
-          Expanded(
-              child: ListView(shrinkWrap: true, children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                    padding: EdgeInsets.only(top: 24, left: 16),
-                    child: Text(
-                      'FONT SIZE',
-                      textAlign: TextAlign.left,
+    return ListView(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+                padding: EdgeInsets.only(top: 24, left: 16),
+                child: Text(
+                  'FONT SIZE',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Lato',
+                    fontSize: 14,
+                  ),
+                )),
+            Padding(
+                padding: const EdgeInsets.only(top: 8, right: 16),
+                child: TextButton(
+                  child: const Text('Reset',
+                      textAlign: TextAlign.right,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Color(0xFF734E09),
                         fontFamily: 'Lato',
                         fontSize: 14,
-                      ),
-                    )),
-                Padding(
-                    padding: const EdgeInsets.only(top: 8, right: 16),
-                    child: TextButton(
-                      child: const Text('Reset',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: Color(0xFF734E09),
-                            fontFamily: 'Lato',
-                            fontSize: 14,
-                          )),
-                      onPressed: () {
-                        controller.resetFontSize();
-                      },
-                    )),
-              ],
+                      )),
+                  onPressed: () {
+                    controller.resetFontSize();
+                  },
+                )),
+          ],
+        ),
+        Container(
+            margin: const EdgeInsets.only(left: 16, right: 16),
+            width: 340,
+            height: 280,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              color: Color.fromRGBO(255, 255, 255, 1),
             ),
-            Container(
-                margin: const EdgeInsets.only(left: 16, right: 16),
-                // margin: const EdgeInsets.only(top: 16),
-
-                width: 340,
-                height: 280,
+            child: Container(
+                width: Get.width - 32,
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
                   color: Color.fromRGBO(255, 255, 255, 1),
                 ),
-                child: Container(
-                    width: Get.width - 32,
-                    // height: Get.height - 200,
-                    //padding: const EdgeInsets.only(top: 5),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Color.fromRGBO(255, 255, 255, 1),
-                    ),
-                    child: Column(children: <Widget>[
-                      Flexible(
-                          child: ListView(
-                              shrinkWrap: true,
-                              physics: const BouncingScrollPhysics(),
-                              children: <Widget>[
-                            _getFontSizeUI(),
-                          ])),
-                    ]))),
-          ])),
-        ]);
+                child: Column(children: <Widget>[
+                  Flexible(
+                      child: ListView(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          children: <Widget>[
+                        _getFontSizeUI(),
+                      ])),
+                ]))),
+      ],
+    );
   }
 
   Widget _getFontSizeUI() {

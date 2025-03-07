@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:alquran_malayalam/pages/tranlisting/tranlisting_controller.dart';
 import 'package:alquran_malayalam/models/surah.dart';
 import 'package:alquran_malayalam/pages/tranlisting/components/surah_title.dart';
+import 'package:alquran_malayalam/widgets/settings_dialog.dart';
+import 'package:alquran_malayalam/pages/settings/settings_controller.dart';
 
 class TranListingPage extends StatelessWidget {
   List<Surah> surahs = [];
@@ -45,7 +47,7 @@ class TranListingPage extends StatelessWidget {
           actions: [
             IconButton(
                 onPressed: () {
-                  Get.toNamed(AppRoutes.SETTINGS);
+                  Get.dialog(SettingsDialog());
                 },
                 icon: Icon(Icons.settings)),
             IconButton(
@@ -228,6 +230,8 @@ class TranLineView extends StatelessWidget {
   final TranLine tranLine;
   final index;
   final TranListingController controller = Get.find();
+  final SettingsController settingsController = Get.find<SettingsController>();
+
   TranLineView({required this.tranLine, required this.index});
 
   @override
@@ -282,15 +286,15 @@ class TranLineView extends StatelessWidget {
         Container(
           padding: const EdgeInsets.only(bottom: 10.0),
           alignment: Alignment.topLeft,
-          child: Text(
-            inTranLine.malTran,
-            style: TextStyle(
-              fontFamily: 'NotoSansMalayalam',
-              fontSize: controller.fontSizeMalayalam.value,
-              color: const Color(0xFF240F4F),
-            ),
-            textAlign: TextAlign.left,
-          ),
+          child: Obx(() => Text(
+                inTranLine.malTran,
+                style: TextStyle(
+                  fontFamily: 'NotoSansMalayalam',
+                  fontSize: settingsController.fontSizeMalayalam.value,
+                  color: const Color(0xFF240F4F),
+                ),
+                textAlign: TextAlign.left,
+              )),
         ),
 
         // Show action buttons
@@ -357,23 +361,23 @@ class TranLineView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            arabWord,
-            style: TextStyle(
-              fontFamily: 'AmiriQuran',
-              fontSize: controller.fontSizeArabic.value,
-              fontWeight: FontWeight.w600,
-              height: 2,
-            ),
-          ),
+          Obx(() => Text(
+                arabWord,
+                style: TextStyle(
+                  fontFamily: 'AmiriQuran',
+                  fontSize: settingsController.fontSizeArabic.value,
+                  fontWeight: FontWeight.w600,
+                  height: 2,
+                ),
+              )),
           const SizedBox(height: 5.0),
-          Text(
-            malWord,
-            style: TextStyle(
-              fontFamily: 'NotoSansMalayalam',
-              fontSize: controller.fontSizeMalayalam.value - 2,
-            ),
-          ),
+          Obx(() => Text(
+                malWord,
+                style: TextStyle(
+                  fontFamily: 'NotoSansMalayalam',
+                  fontSize: settingsController.fontSizeMalayalam.value - 2,
+                ),
+              )),
         ],
       ),
     );
