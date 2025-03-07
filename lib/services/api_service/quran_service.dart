@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class QuranService {
-  final String baseUrl = "https://alquranmalayalam.net/alquran-api";
+  final String baseUrl = "https://old.alquranmalayalam.net/alquran-api";
   var ArticleId = 1;
   var surahNumber = 1;
   var AyaNumber = 1;
