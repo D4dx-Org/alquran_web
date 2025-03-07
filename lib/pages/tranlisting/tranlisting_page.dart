@@ -1,12 +1,12 @@
 import 'package:alquran_malayalam/models/transl.dart';
-import 'package:alquran_malayalam/pages/tranlisting/widgets/row_buttons.dart';
+import 'package:alquran_malayalam/pages/tranlisting/components/row_buttons.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
 import 'package:alquran_malayalam/widgets/ayah_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/pages/tranlisting/tranlisting_controller.dart';
 import 'package:alquran_malayalam/models/surah.dart';
-import 'package:alquran_malayalam/pages/tranlisting/widgets/surah_title.dart';
+import 'package:alquran_malayalam/pages/tranlisting/components/surah_title.dart';
 
 class TranListingPage extends StatelessWidget {
   List<Surah> surahs = [];
