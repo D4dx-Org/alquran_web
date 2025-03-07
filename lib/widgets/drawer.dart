@@ -1,7 +1,8 @@
+import 'package:alquran_malayalam/constants/image_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
-import 'package:alquran_malayalam/helpers/constants.dart';
+import 'package:alquran_malayalam/constants/constants.dart';
 import 'package:alquran_malayalam/widgets/settings_dialog.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -24,7 +25,7 @@ class MyDrawer extends StatelessWidget {
                 child: const DrawerHeader(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: ExactAssetImage("assets/img/app_logo.png"),
+                      image: ExactAssetImage(ImageClass.appLogo),
                       fit: BoxFit.fitHeight,
                     ),
                   ),

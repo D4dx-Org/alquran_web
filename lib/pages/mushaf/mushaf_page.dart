@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/pages/mushaf/mushaf_controller.dart';
-import 'package:alquran_malayalam/helpers/arabic_numbers.dart';
+import 'package:alquran_malayalam/constants/arabic_numbers.dart';
 
 class MushafPage extends StatefulWidget {
   const MushafPage({super.key});

@@ -1,3 +1,4 @@
+import 'package:alquran_malayalam/constants/image_class.dart';
 import 'package:alquran_malayalam/models/surah.dart';
 import 'package:alquran_malayalam/pages/index/index_controller.dart';
 import 'package:alquran_malayalam/pages/tranlisting/components/surah_nav.dart';
@@ -31,7 +32,7 @@ class SuraTitleWidget extends StatelessWidget {
               colorFilter: ColorFilter.mode(
                   Color(0xFF21DAFF).withOpacity(0.02), BlendMode.softLight),
               opacity: 0.3,
-              image: const ExactAssetImage('assets/img/quran.png')),
+              image: const ExactAssetImage(ImageClass.quran)),
         ),
         padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         child: Column(

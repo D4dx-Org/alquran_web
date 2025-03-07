@@ -1,6 +1,5 @@
 import 'package:alquran_malayalam/models/transl.dart';
 import 'package:alquran_malayalam/pages/tranlisting/components/row_buttons.dart';
-import 'package:alquran_malayalam/routes/routes.dart';
 import 'package:alquran_malayalam/widgets/ayah_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
