@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
 import 'package:alquran_malayalam/helpers/constants.dart';
+import 'package:alquran_malayalam/widgets/settings_dialog.dart';
 
 class MyDrawer extends StatelessWidget {
   Color iconColor = const Color(0xFF734E09); // Color(0xFF303030);
@@ -31,13 +32,71 @@ class MyDrawer extends StatelessWidget {
                 ),
               )),
           Expanded(
-              flex: 3,
-              child: ListView(
-                children: <Widget>[
-                  ListTile(
-                    leading: Icon(Icons.home, color: iconColor),
+            flex: 3,
+            child: ListView(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.home, color: iconColor),
+                  title: Text(
+                    'Index',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: menuColor),
+                  ),
+                  onTap: () {
+                    Get.back();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.assignment, color: iconColor),
+                  title: Text(
+                    "Preface",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: menuColor),
+                  ),
+                  onTap: () => _openArticlePage(7),
+                ),
+                ListTile(
+                  leading: Icon(Icons.person_pin, color: iconColor),
+                  title: Text(
+                    "Translator",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: menuColor),
+                  ),
+                  onTap: () => _openArticlePage(1),
+                ),
+                ListTile(
+                  leading: Icon(Icons.comment, color: iconColor),
+                  title: Text(
+                    "Publisher Note",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: menuColor),
+                  ),
+                  onTap: () => _openArticlePage(8),
+                ),
+                Divider(color: Colors.black.withOpacity(0.8)),
+                ListTile(
+                    leading: Icon(Icons.settings, color: iconColor),
+                    title: Text("Settings",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: menuColor)),
+                    onTap: () {
+                      Get.back();
+                      Get.dialog(SettingsDialog());
+                    }),
+                ListTile(
+                    leading: Icon(Icons.contact_phone, color: iconColor),
                     title: Text(
-                      'Index',
+                      "Contact",
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -45,72 +104,15 @@ class MyDrawer extends StatelessWidget {
                     ),
                     onTap: () {
                       Get.back();
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.assignment, color: iconColor),
-                    title: Text(
-                      "Preface",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: menuColor),
+                      Get.toNamed(AppRoutes.INFO);
+                    }),
+                Divider(color: Colors.black.withOpacity(0.8)),
+                ListTile(
+                    //   title: _gotoJuzOrPage,
                     ),
-                    onTap: () => _openArticlePage(7),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.person_pin, color: iconColor),
-                    title: Text(
-                      "Translator",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: menuColor),
-                    ),
-                    onTap: () => _openArticlePage(1),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.comment, color: iconColor),
-                    title: Text(
-                      "Publisher Note",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: menuColor),
-                    ),
-                    onTap: () => _openArticlePage(8),
-                  ),
-                  Divider(color: Colors.black.withOpacity(0.8)),
-                  ListTile(
-                      leading: Icon(Icons.settings, color: iconColor),
-                      title: Text("Settings",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: menuColor)),
-                      onTap: () {
-                        Get.back();
-                        Get.toNamed(AppRoutes.SETTINGS);
-                      }),
-                  ListTile(
-                      leading: Icon(Icons.contact_phone, color: iconColor),
-                      title: Text(
-                        "Contact",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: menuColor),
-                      ),
-                      onTap: () {
-                        Get.back();
-                        Get.toNamed(AppRoutes.INFO);
-                      }),
-                  Divider(color: Colors.black.withOpacity(0.8)),
-                  ListTile(
-                      //   title: _gotoJuzOrPage,
-                      ),
-                ],
-              )),
+              ],
+            ),
+          ),
           Container(
             padding: const EdgeInsets.all(10.0),
             alignment: Alignment.center,
