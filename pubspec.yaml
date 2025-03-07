@@ -19,7 +19,6 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 2.0.0+1
 
-
 environment:
   sdk: ">=3.2.0 <4.0.0"
 
@@ -82,13 +81,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/img/numbg.png
-    - assets/img/macca.png
-    - assets/img/madina.png
-    - assets/img/bismi.png
-    - assets/img/quran.png
-    - assets/img/delete20.png
-    - assets/img/app_logo.png
+    - assets/img/
     - assets/json/juz-to-chapter-verse-mappings.json
     - assets/json/page-to-chapter-mappings.json
 

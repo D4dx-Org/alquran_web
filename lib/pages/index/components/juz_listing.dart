@@ -1,3 +1,4 @@
+import 'package:alquran_malayalam/constants/image_class.dart';
 import 'package:alquran_malayalam/models/juz.dart';
 import 'package:alquran_malayalam/models/surah.dart';
 import 'package:alquran_malayalam/pages/index/index_controller.dart';
@@ -147,8 +148,7 @@ class JuzListing extends StatelessWidget {
                 children: <Widget>[
                   CircleAvatar(
                     backgroundColor: Colors.transparent,
-                    backgroundImage:
-                        const ExactAssetImage('assets/img/numbg.png'),
+                    backgroundImage: const ExactAssetImage(ImageClass.numberBg),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 3.0),
                       child: Text(
@@ -180,8 +180,8 @@ class JuzListing extends StatelessWidget {
                       children: [
                         Image(
                           image: (surah.suraType == 'مَكِّيَة')
-                              ? const ExactAssetImage('assets/img/macca.png')
-                              : const ExactAssetImage('assets/img/madina.png'),
+                              ? const ExactAssetImage(ImageClass.macca)
+                              : const ExactAssetImage(ImageClass.madina),
                         ),
                         const SizedBox(width: 8),
                         Text(

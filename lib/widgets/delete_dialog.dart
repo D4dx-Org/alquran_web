@@ -1,3 +1,4 @@
+import 'package:alquran_malayalam/constants/image_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -57,7 +58,7 @@ class DeleteDialog {
                           ),
                           borderRadius: const BorderRadius.all(Radius.circular(54))),
                       child: const Image(
-                        image: ExactAssetImage('assets/img/delete20.png'),
+                        image: ExactAssetImage(ImageClass.delete),
                       ),
                     ))),
                 Center(

@@ -1,3 +1,4 @@
+import 'package:alquran_malayalam/constants/image_class.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/img/app_logo.png', width: 200, height: 200),
+            Image.asset(ImageClass.appLogo, width: 200, height: 200),
             SizedBox(height: 20),
             Text('Al-Quran Malayalam',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
