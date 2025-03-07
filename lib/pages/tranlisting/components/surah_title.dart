@@ -1,6 +1,6 @@
 import 'package:alquran_malayalam/models/surah.dart';
 import 'package:alquran_malayalam/pages/index/index_controller.dart';
-import 'package:alquran_malayalam/pages/tranlisting/widgets/surah_nav.dart';
+import 'package:alquran_malayalam/pages/tranlisting/components/surah_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
