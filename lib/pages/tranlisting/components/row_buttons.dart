@@ -34,7 +34,7 @@ class RowButtonsRow extends StatelessWidget {
                 SizedBox(width: 10),
                 Container(
                     alignment: Alignment.center,
-                    width: 30,
+                    width: 80,
                     height: 30,
                     child: Text(
                       '${curTranLine.suraNo}:${curTranLine.ayaNo}',
