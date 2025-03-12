@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:alquran_malayalam/routes/routes.dart';
 import 'package:alquran_malayalam/services/api_service/quran_service.dart';
 import 'package:alquran_malayalam/services/surah_services.dart';
+import 'package:alquran_malayalam/helpers/settings_helpers.dart';
 
 class IndexController extends GetxController {
   QuranService quranService = QuranService();
@@ -57,7 +58,10 @@ class IndexController extends GetxController {
       print('Processed ${surahs.length} surahs');
       isLoading = false;
       if (surahs.isNotEmpty) {
-        selectSurah(surahs.first);
+        // Load the last selected surah or default to first surah
+        int lastSurahId = SettingsHelpers.instance.getLastSelectedSurah;
+        print('Loading last selected surah ID: $lastSurahId');
+        selectSurah(getSurah(lastSurahId));
       }
       update();
     } catch (e) {
@@ -103,7 +107,11 @@ class IndexController extends GetxController {
   }
 
   selectSurah(Surah surah) async {
+    print('Selecting surah: ${surah.suraId} - ${surah.mSuraName}');
     selectedSurah.value = surah;
+    // Save the selected surah ID
+    SettingsHelpers.instance.lastSelectedSurah(surah.suraId);
+    print('Saved selected surah ID: ${surah.suraId}');
   }
 
   loadSuraDetailPage(int suraId, {int ayaNo = 1}) async {

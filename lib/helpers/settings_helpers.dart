@@ -45,4 +45,14 @@ class SettingsHelpers {
     String? fontSizeString = _prefBox.read('fontSizeMalayalam');
     return double.tryParse(fontSizeString ?? minFontSizeMalayalam.toString());
   }
+
+  // Save last selected surah ID
+  lastSelectedSurah(int suraId) {
+    _prefBox.write('lastSelectedSurah', suraId);
+  }
+
+  // Get last selected surah ID, default to 1 if not found
+  int get getLastSelectedSurah {
+    return _prefBox.read('lastSelectedSurah') ?? 1;
+  }
 }
