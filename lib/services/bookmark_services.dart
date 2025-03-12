@@ -7,15 +7,15 @@ class BookmarksServices {
 
   Future<List<Bookmark>> getAllBookmarks() async {
     try {
-      print(
-          'BookmarksServices: Attempting to read bookmarks from SharedPreferences');
+      // print(
+      //     'BookmarksServices: Attempting to read bookmarks from SharedPreferences');
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? bookmarksDataString = prefs.getString(BOOKMARKS_KEY);
-      print(
-          'BookmarksServices: Raw data from SharedPreferences: $bookmarksDataString');
+      // print(
+      //     'BookmarksServices: Raw data from SharedPreferences: $bookmarksDataString');
 
       if (bookmarksDataString == null) {
-        print('BookmarksServices: No bookmarks found in SharedPreferences');
+        // print('BookmarksServices: No bookmarks found in SharedPreferences');
         return [];
       }
 
