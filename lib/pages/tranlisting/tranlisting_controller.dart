@@ -1,4 +1,3 @@
-
 import 'package:alquran_malayalam/models/bookmark.dart';
 import 'package:alquran_malayalam/models/transl.dart';
 import 'package:alquran_malayalam/services/api_service/quran_service.dart';
@@ -11,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:alquran_malayalam/pages/index/index_controller.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:alquran_malayalam/pages/bookmarks/bookmarks_controller.dart';
+import 'dart:developer' as developer;
 
 class TranListingController extends GetxController {
   QuranService quranService = QuranService();
@@ -43,9 +43,16 @@ class TranListingController extends GetxController {
   int initialAyahDiff = 0;
   List<TranLine> balSubLineList = [];
 
+  // To prevent multiple scroll triggers
+  bool isScrolling = false;
+  DateTime? lastScrollTime;
+
   // Add RxMap to track bookmark states
   final RxMap<String, bool> bookmarkStates = <String, bool>{}.obs;
   final BookmarksServices _bookmarksServices = BookmarksServices();
+
+  // A set to keep track of loaded line IDs to prevent duplicates
+  final Set<int> loadedLineIds = <int>{};
 
   @override
   void onInit() {
@@ -60,6 +67,9 @@ class TranListingController extends GetxController {
         curPageNo.value = 1;
         indexController.selAyahNo.value = 1;
         maxPageNo = (surah.totalAyas / _perPage).ceil();
+
+        // Clear loaded line IDs when surah changes
+        loadedLineIds.clear();
       }
       curSuraId.value = surah!.suraId;
       loadtranLineList(surah.suraId);
@@ -68,7 +78,7 @@ class TranListingController extends GetxController {
           0.0,
         );
       } catch (e) {
-        // print('error caught: $e');
+        developer.log('TranListingController: Error jumping to top: $e');
       }
     });
 
@@ -84,18 +94,36 @@ class TranListingController extends GetxController {
         scroll_visibility.value = true;
         update();
       }
+
+      // Check if we're near the bottom of the scroll
       if (!isScrollLoading &&
+          !isScrolling &&
           tranLineListScrollController.position.pixels >=
-              tranLineListScrollController.position.maxScrollExtent - 10) {
+              tranLineListScrollController.position.maxScrollExtent * 0.8) {
+        // Changed to 80% of max scroll
+        isScrolling = true;
         curPageNo.value = maxScrolledPageNo;
         curAyaNo = (curPageNo.value - 1) * 7 + 1;
         getNavPage(1);
-      } else if (!isScrollLoading &&
+        Future.delayed(Duration(milliseconds: 500), () {
+          // Increased delay for better UX
+          isScrolling = false;
+        });
+      }
+      // Check if we're near the top of the scroll
+      else if (!isScrollLoading &&
+          !isScrolling &&
           tranLineListScrollController.position.pixels <=
-              tranLineListScrollController.position.minScrollExtent) {
+              tranLineListScrollController.position.minScrollExtent * 0.2) {
+        // Changed to 20% from top
+        isScrolling = true;
         curPageNo.value = minScrolledPageNo;
         curAyaNo = (curPageNo.value - 1) * 7 + 1;
         getNavPage(-1);
+        Future.delayed(Duration(milliseconds: 500), () {
+          // Increased delay for better UX
+          isScrolling = false;
+        });
       }
     });
 
@@ -130,7 +158,14 @@ class TranListingController extends GetxController {
   loadtranLineList(int suraNo, {int ayaNo = 1}) async {
     int indexToScroll = 0;
     isPanStarted = true;
+
+    // Clear the existing list and the loaded IDs set when loading a new surah
     tranLineList.value = [];
+    loadedLineIds.clear();
+
+    developer.log(
+        'TranListingController: Loading lines for Surah $suraNo, page ${curPageNo.value}, ayah $ayaNo');
+
     if (ayaNo >= 1) {
       curPageNo.value = (ayaNo / _perPage).ceil();
       minScrolledPageNo = curPageNo.value;
@@ -145,10 +180,24 @@ class TranListingController extends GetxController {
           pageNo: curPageNo.value,
           perPage: _perPage,
           inStartAyaNo: curAyaNo);
+
+      developer
+          .log('TranListingController: Received ${list.length} lines from API');
+
       if (initialAyahDiff > 0) {
         indexToScroll = list.indexWhere((element) => element.ayaNo == ayaNo);
       }
+
+      // Add lines and update the loaded IDs set
+      for (var line in list) {
+        if (!loadedLineIds.contains(line.lineId)) {
+          loadedLineIds.add(line.lineId);
+        }
+      }
       tranLineList.addAll(list);
+
+      developer.log(
+          'TranListingController: Added ${list.length} unique lines, total now: ${tranLineList.length}');
 
       // Load bookmark states for the new lines
       await loadBookmarkStates();
@@ -162,48 +211,104 @@ class TranListingController extends GetxController {
       update();
       isPanStarted = false;
     } catch (e) {
-      // print(e);
+      isLoading = false;
+      developer.log('TranListingController: Error loading lines: $e');
     }
   }
 
   loadTranLinesMore(int shift) async {
+    if (isScrollLoading) {
+      developer
+          .log('TranListingController: Already loading more lines, skipping');
+      return;
+    }
+
+    developer.log(
+        'TranListingController: Loading more lines with shift: $shift, page: ${curPageNo.value}');
+
     int diff = 0;
     if (curPageNo.value == 1 && curAyaNo != 1) {
       diff = curAyaNo - 1;
       curAyaNo = curAyaNo - diff;
     }
-    //shift -1 prepend , +1 append
-    if (!isScrollLoading) {
-      try {
-        isScrollLoading = true;
-        List<TranLine> list = await tranListingServices.getTranLines(
-            suraNo: curSuraId.value,
-            pageNo: curPageNo.value,
-            perPage: _perPage + diff,
-            inStartAyaNo: curAyaNo);
 
-        if (shift == -1) {
-          if (balSubLineList.isNotEmpty) {
-            tranLineList.insertAll(0, balSubLineList);
-            balSubLineList = [];
+    try {
+      isScrollLoading = true;
+      List<TranLine> list = await tranListingServices.getTranLines(
+          suraNo: curSuraId.value,
+          pageNo: curPageNo.value,
+          perPage: _perPage + diff,
+          inStartAyaNo: curAyaNo);
+
+      developer.log(
+          'TranListingController: Received ${list.length} more lines from API');
+
+      if (list.isEmpty) {
+        developer.log('TranListingController: No more lines available');
+        return;
+      }
+
+      // Filter out duplicates
+      List<TranLine> uniqueLines =
+          list.where((line) => !loadedLineIds.contains(line.lineId)).toList();
+
+      developer.log(
+          'TranListingController: After filtering, ${uniqueLines.length} unique lines to add');
+
+      // Track newly added lines
+      for (var line in uniqueLines) {
+        loadedLineIds.add(line.lineId);
+      }
+
+      if (shift == -1) {
+        if (balSubLineList.isNotEmpty) {
+          List<TranLine> uniqueBalLines = balSubLineList
+              .where((line) => !loadedLineIds.contains(line.lineId))
+              .toList();
+
+          if (uniqueBalLines.isNotEmpty) {
+            tranLineList.insertAll(0, uniqueBalLines);
+            for (var line in uniqueBalLines) {
+              loadedLineIds.add(line.lineId);
+            }
           }
-          tranLineList.insertAll(0, list);
-        } else {
-          tranLineList.addAll(list);
+          balSubLineList = [];
         }
-        if (shift == -1) {
+
+        if (uniqueLines.isNotEmpty) {
+          tranLineList.insertAll(0, uniqueLines);
+        }
+      } else {
+        if (uniqueLines.isNotEmpty) {
+          tranLineList.addAll(uniqueLines);
+          // Trigger a small scroll to ensure the user sees new content
           await tranLineListScrollController.animateTo(
-            tranLineListScrollController.position.minScrollExtent + 10,
-            duration: Duration(seconds: 1),
+            tranLineListScrollController.position.pixels - 50,
+            duration: Duration(milliseconds: 300),
             curve: Curves.easeOut,
           );
         }
-        update();
-        isScrollLoading = false;
-      } catch (e) {
-        isScrollLoading = false;
-        // print(e);
       }
+
+      developer.log(
+          'TranListingController: Total lines after adding more: ${tranLineList.length}');
+
+      if (shift == -1 && uniqueLines.isNotEmpty) {
+        await tranLineListScrollController.animateTo(
+          tranLineListScrollController.position.minScrollExtent + 10,
+          duration: Duration(seconds: 1),
+          curve: Curves.easeOut,
+        );
+      }
+
+      // Load bookmark states for new lines
+      await loadBookmarkStates();
+
+      update();
+    } catch (e) {
+      developer.log('TranListingController: Error loading more lines: $e');
+    } finally {
+      isScrollLoading = false;
     }
   }
 
@@ -223,8 +328,13 @@ class TranListingController extends GetxController {
       }
     }
     if (cPageNum != curPageNo.value) {
+      developer.log(
+          'TranListingController: Navigating to page $cPageNum with shift $shift');
       curPageNo.value = cPageNum;
       loadTranLinesMore(shift);
+    } else {
+      developer.log(
+          'TranListingController: No page change needed, current page: $cPageNum');
     }
   }
 
@@ -269,7 +379,7 @@ class TranListingController extends GetxController {
       }
       update();
     } catch (e) {
-      print('Error toggling bookmark: $e');
+      developer.log('Error toggling bookmark: $e');
       Get.snackbar('Error', 'Failed to toggle bookmark',
           snackPosition: SnackPosition.BOTTOM);
     }
